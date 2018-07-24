@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">APLK</string>
+
+    <string name="informasi">Informasi</string>
+    <string name="laporan">Laporan</string>
+    <string name="adainfo">Ada Info?</string>
+    <string name="kirim">kirim</string>
 </resources>
