@@ -4,15 +4,15 @@ package com.adibu.aplk;
 Data model untuk bagian informasi
 */
 
-public class Informasi {
+public class InformasiModel {
 
     private String nama;
-    private String tanggal;
+    private String waktu;
     private String isi;
 
-    public Informasi(String nama, String tanggal, String isi) {
+    public InformasiModel(String nama, String waktu, String isi) {
         this.nama = nama;
-        this.tanggal = tanggal;
+        this.waktu = waktu;
         this.isi = isi;
     }
 
@@ -24,12 +24,12 @@ public class Informasi {
         this.nama = nama;
     }
 
-    public String getTanggal() {
-        return tanggal;
+    public String getWaktu() {
+        return waktu;
     }
 
-    public void setTanggal(String tanggal) {
-        this.tanggal = tanggal;
+    public void setWaktu(String waktu) {
+        this.waktu = waktu;
     }
 
     public String getIsi() {

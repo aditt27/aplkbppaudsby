@@ -3,7 +3,6 @@ package com.adibu.aplk;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class InformasiRecyclerViewAdapter extends RecyclerView.Adapter<InformasiRecyclerViewAdapter.ViewHolder>{
 
-    private ArrayList<Informasi> mListInformasi;
+    private ArrayList<InformasiModel> mListInformasi;
     private Context mContext;
 
-    public RecyclerViewAdapter(ArrayList<Informasi> mListInformasi, Context mContext) {
+    public InformasiRecyclerViewAdapter(ArrayList<InformasiModel> mListInformasi, Context mContext) {
         this.mListInformasi = mListInformasi;
         this.mContext = mContext;
     }
@@ -33,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.nama.setText(mListInformasi.get(position).getNama());
-        holder.tanggal.setText(mListInformasi.get(position).getTanggal());
+        holder.tanggal.setText(mListInformasi.get(position).getWaktu());
         holder.isi.setText(mListInformasi.get(position).getIsi());
     }
 
