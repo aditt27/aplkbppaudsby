@@ -1,10 +1,18 @@
 package com.adibu.aplk;
 
 public class ApiUrl {
-    private static final String ROOT_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
+    private static final String ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
 
-    public static final String URL_CREATE_MSG = ROOT_URL + "createmsg";
-    public static final String URL_READ_MSG = ROOT_URL + "getmsg";
-    public static final String URL_UPDATE_MSG = ROOT_URL + "updatemsg";
-    public static final String URL_DELETE_MSG = ROOT_URL + "deletemsg&no=";
+    //Informasi Message
+    public static final String URL_CREATE_MSG = ROOT_API_URL + "createmsg";  //POST , params: nama, isi
+    public static final String URL_READ_MSGS = ROOT_API_URL + "getmsg"; //GET , no params
+    public static final String URL_UPDATE_MSG = ROOT_API_URL + "updatemsg"; //POST , params: no, isi
+    public static final String URL_DELETE_MSG = ROOT_API_URL + "deletemsg&no="; //GET , params: no
+
+    //User Data
+    public static final String URL_CREATE_USER = ROOT_API_URL + "createuser"; //POST , params: nip, password, nama, karyawan, pengawas, admin
+    public static final String URL_READ_USERS = ROOT_API_URL + "getuser"; //GET , no params
+    public static final String URL_READ_USER = ROOT_API_URL + "getusernip&nip="; //GET , params: nip
+    public static final String URL_UPDATE_USER = ROOT_API_URL + "updateuser"; //POST , params: nip, nama
+    public static final String URL_DELETE_USER = ROOT_API_URL + "deleteuser&no="; //GET , params: nip
 }

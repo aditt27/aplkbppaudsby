@@ -1,7 +1,6 @@
 package com.adibu.aplk;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,7 +56,7 @@ public class InformasiFragment extends Fragment {
 
     private void getListInformasi() {
         String tag_get_listInformasi = "tag_get_listInformasi";
-        String url = ApiUrl.URL_READ_MSG;
+        String url = ApiUrl.URL_READ_MSGS;
 
         JsonObjectRequest jsonListInformasi = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override

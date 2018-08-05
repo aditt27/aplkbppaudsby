@@ -5,4 +5,13 @@
     <string name="laporan">Laporan</string>
     <string name="adainfo">Ada Info?</string>
     <string name="kirim">kirim</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="salahnipataupassword">NIP atau password anda salah</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="logout">Logout</string>
+    <string name="nip">NIP</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
 </resources>
