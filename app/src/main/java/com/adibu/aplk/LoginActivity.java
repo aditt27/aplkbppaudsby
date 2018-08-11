@@ -94,6 +94,15 @@ public class LoginActivity extends AppCompatActivity {
                             SessionManager sessionManager = new SessionManager(LoginActivity.this);
                             sessionManager.createSession(nip, nama, karyawan, pengawas, admin);
                             finish();
+                        } else {
+                            if (pDialog.isShowing()) {
+                                pDialog.dismiss();
+                            }
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            builder.setMessage(R.string.salahpassword);
+                            builder.setPositiveButton(R.string.ok, null);
+                            builder.setTitle(R.string.error);
+                            builder.show();
                         }
                     }
                     else {
@@ -101,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                             pDialog.dismiss();
                         }
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setMessage(R.string.salahnipataupassword);
+                        builder.setMessage(R.string.salahnip);
                         builder.setPositiveButton(R.string.ok, null);
                         builder.setTitle(R.string.error);
                         builder.show();

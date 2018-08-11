@@ -1,6 +1,9 @@
 package com.adibu.aplk;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,15 +11,23 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
-    private ViewPagerAdapter mViewPagerAdapter;
     private SessionManager mSessionManager;
 
     @Override
@@ -28,16 +39,29 @@ public class MainActivity extends AppCompatActivity {
         mSessionManager = new SessionManager(this);
         mSessionManager.checkLogin();
 
-        //FRAGMENT
-        mViewPager = findViewById(R.id.view_pager);
-        // Create an adapter that knows which fragment should be shown on each page
-        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        // Set the adapter onto the view pager
-        mViewPager.setAdapter(mViewPagerAdapter);
+        GridView gridView = findViewById(R.id.main_grid);
+        GridAdapter gridAdapter = new GridAdapter(this, 0);
+        gridView.setAdapter(gridAdapter);
 
-        //TAB LAYOUT UNTUK FRAGMENT
-        final TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(mViewPager);
+        gridAdapter.add(new MainModel(android.R.drawable.ic_menu_share, R.string.laporan));
+        gridAdapter.add(new MainModel(android.R.drawable.ic_dialog_info, R.string.informasi));
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Intent i = new Intent(MainActivity.this, LaporanActivity.class);
+                        startActivity(i);
+                        break;
+                    case 1:
+                        Intent j = new Intent(MainActivity.this, InformasiActivity.class);
+                        startActivity(j);
+                        break;
+                }
+            }
+        });
+
     }
 
     @Override
@@ -57,36 +81,59 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
-        //Judul tiap tab
-        private String[] tabTitles = {getString(R.string.laporan), getString(R.string.informasi)};
-        final int pageCount = tabTitles.length;
+    private class GridAdapter extends ArrayAdapter<MainModel> {
 
-        //Default constructor
-        private ViewPagerAdapter(FragmentManager fm) {
-            super(fm);
+        public GridAdapter(@NonNull Context context, int resource) {
+            super(context, resource);
         }
 
-
+        @NonNull
         @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                //Urut class tiap fragment
-                case 0:
-                    return new LaporanFragment();
-                default:
-                    return new InformasiFragment();
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View gridItemView = convertView;
+            if(gridItemView == null) {
+                gridItemView = LayoutInflater.from(getContext()).inflate(
+                        R.layout.main_item, parent, false);
             }
+
+            MainModel currentItem = getItem(position);
+
+            TextView title = gridItemView.findViewById(R.id.main_item_text);
+            title.setText(getString(currentItem.getNameId()));
+
+            ImageView image = (ImageView)gridItemView.findViewById(R.id.main_item_image);
+            image.setImageResource(currentItem.getImageId());
+
+
+            return gridItemView;
         }
 
-        @Override
-        public int getCount() {
-            return pageCount;
+    }
+
+    private class MainModel {
+        private int imageId;
+        private int nameId;
+
+        public MainModel(int imageId, int nameId) {
+            this.imageId = imageId;
+            this.nameId = nameId;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
+        public int getImageId() {
+            return imageId;
+        }
+
+        public void setImageId(int imageId) {
+            this.imageId = imageId;
+        }
+
+        public int getNameId() {
+            return nameId;
+        }
+
+        public void setNameId(int nameId) {
+            this.nameId = nameId;
         }
     }
+
 }

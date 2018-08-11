@@ -52,6 +52,10 @@ public class SessionManager {
         return session;
     }
 
+    public String getSessionNIP() {
+        return pref.getString(KEY_NIP, null);
+    }
+
     public void checkLogin(){
         // Check login status
         if(!this.isLoggedIn()){
