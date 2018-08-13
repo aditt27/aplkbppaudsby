@@ -15,4 +15,9 @@ public class ApiUrl {
     public static final String URL_READ_USER = ROOT_API_URL + "r_user_nip&nip="; //GET , params: nip
     public static final String URL_UPDATE_USER = ROOT_API_URL + "updateuser"; //POST , params: nip, nama
     public static final String URL_DELETE_USER = ROOT_API_URL + "deleteuser&no="; //GET , params: nip
+
+    //Image
+    public static final String URL_CREATE_INFO_NEW = ROOT_API_URL + "up_img_info_create"; //POST , params: pic
+    public static final String URL_CREATE_INFO_UP = ROOT_API_URL + "up_img_info_update&no="; //POST , params: pic, no
+    public static final String URL_READ_INFO_IMAGE = ROOT_API_URL + "r_img_info&no="; //GET , params: no
 }
