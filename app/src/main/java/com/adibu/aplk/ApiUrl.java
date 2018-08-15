@@ -4,9 +4,8 @@ public class ApiUrl {
     private static final String ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
 
     //Informasi
-    public static final String URL_CREATE_MSG = ROOT_API_URL + "c_info";  //POST , params: nip, isi, pic(optional)
-    public static final String URL_READ_MSGS = ROOT_API_URL + "r_info"; //GET , no params
-    //r_info_nip&nip= (Menggantikan yg atasnya, parameter nip adalah nip user, jadi user hanya bisa membaca pesan untuk dia)
+    public static final String URL_CREATE_MSG = ROOT_API_URL + "c_info";  //POST , params: nip, isi, pic(optional), a,b,c,d,e,f,g
+    public static final String URL_READ_MSGS = ROOT_API_URL + "r_info_nip&nip="; //GET , params: nip
     public static final String URL_UPDATE_MSG = ROOT_API_URL + "updatemsg"; //POST , params: no, isi
     public static final String URL_DELETE_MSG = ROOT_API_URL + "deletemsg&no="; //GET , params: no
 
