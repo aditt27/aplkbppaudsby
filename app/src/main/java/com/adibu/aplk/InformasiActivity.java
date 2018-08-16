@@ -10,10 +10,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -44,6 +46,12 @@ public class InformasiActivity extends AppCompatActivity {
 
         mInformasiRVAdapter = new InformasiRecyclerViewAdapter(mListInformasi);
         recyclerView.setAdapter(mInformasiRVAdapter);
+
+        //Reverse Item (Newest one in the top)
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setReverseLayout(true);
+        llm.setStackFromEnd(true);
+        recyclerView.setLayoutManager(llm);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +86,10 @@ public class InformasiActivity extends AppCompatActivity {
     }
 
     private void getListInformasi() {
-
+        SessionManager sm = new SessionManager(getApplicationContext());
         String tag_get_listInformasi = "tag_get_listInformasi";
-        String url = ApiUrl.URL_READ_MSGS;
+        String url = ApiUrl.URL_READ_MSGS+sm.getSessionNIP();
+
 
         JsonObjectRequest jsonListInformasi = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -90,15 +99,18 @@ public class InformasiActivity extends AppCompatActivity {
                     mListInformasi.clear();
 
                     //Ambil array dari json yg judul arraynya "msgs"
-                    JSONArray jsonListInformasi = response.getJSONArray("infos");
+                    JSONArray jsonListInformasi = response.getJSONArray("info");
 
                     //masukin yg ada di jsonarray ke arraylist informasi
                     for(int i=0;i<jsonListInformasi.length();i++) {
+                        int no = jsonListInformasi.getJSONObject(i).getInt("no");
                         String nama = jsonListInformasi.getJSONObject(i).getString("nama");
                         String waktu = jsonListInformasi.getJSONObject(i).getString("waktu");
                         String isi = jsonListInformasi.getJSONObject(i).getString("isi");
+                        String gambar = jsonListInformasi.getJSONObject(i).getString("gambar");
+                        int status = jsonListInformasi.getJSONObject(i).getInt("status");
                         //masukin ke arraylistnya descending order, masukin ke index 0 terus tiap item
-                        mListInformasi.add(0, new InformasiModel(nama, waktu, isi));
+                        mListInformasi.add(new InformasiModel(no, nama, waktu, isi, gambar, status));
                     }
 
                     //update adapter setelah masukin ke arraylist informasi
@@ -127,14 +139,24 @@ public class InformasiActivity extends AppCompatActivity {
         Data model untuk bagian informasi
         */
 
+        private int no;
         private String nama;
         private String waktu;
         private String isi;
+        private String gambar;
+        private int status;
 
-        private InformasiModel(String nama, String waktu, String isi) {
+        public InformasiModel(int no, String nama, String waktu, String isi, String gambar, int status) {
+            this.no = no;
             this.nama = nama;
             this.waktu = waktu;
             this.isi = isi;
+            this.gambar = gambar;
+            this.status = status;
+        }
+
+        public int getNo() {
+            return no;
         }
 
         public String getNama() {
@@ -149,14 +171,21 @@ public class InformasiActivity extends AppCompatActivity {
             return isi;
         }
 
+        public String getGambar() {
+            return gambar;
+        }
+
+        public int getStatus() {
+            return status;
+        }
     }
 
     public class InformasiRecyclerViewAdapter extends RecyclerView.Adapter<InformasiRecyclerViewAdapter.ViewHolder>{
 
-        private ArrayList<InformasiModel> mListInformasi;
+        private ArrayList<InformasiModel> listInformasi;
 
         public InformasiRecyclerViewAdapter(ArrayList<InformasiModel> mListInformasi) {
-            this.mListInformasi = mListInformasi;
+            this.listInformasi = mListInformasi;
         }
 
         @NonNull
@@ -168,22 +197,34 @@ public class InformasiActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull InformasiRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.nama.setText(mListInformasi.get(position).getNama());
-            holder.tanggal.setText(mListInformasi.get(position).getWaktu());
-            holder.isi.setText(mListInformasi.get(position).getIsi());
+        public void onBindViewHolder(@NonNull final InformasiRecyclerViewAdapter.ViewHolder holder, int position) {
+            holder.nama.setText(listInformasi.get(position).getNama());
+            holder.tanggal.setText(listInformasi.get(position).getWaktu());
+            holder.itemLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(getApplicationContext(), String.valueOf(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(InformasiActivity.this, DetailInformasiActivity.class);
+                    i.putExtra("no", listInformasi.get(holder.getAdapterPosition()).getNo());
+                    i.putExtra("nama", listInformasi.get(holder.getAdapterPosition()).getNama());
+                    i.putExtra("waktu", listInformasi.get(holder.getAdapterPosition()).getWaktu());
+                    i.putExtra("isi", listInformasi.get(holder.getAdapterPosition()).getIsi());
+                    i.putExtra("gambar", listInformasi.get(holder.getAdapterPosition()).getGambar());
+                    i.putExtra("status", listInformasi.get(holder.getAdapterPosition()).getStatus());
+                    startActivity(i);
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return mListInformasi.size();
+            return listInformasi.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView nama;
             TextView tanggal;
-            TextView isi;
 
             RelativeLayout itemLayout;
 
@@ -191,7 +232,6 @@ public class InformasiActivity extends AppCompatActivity {
                 super(itemView);
                 nama = itemView.findViewById(R.id.informasi_item_nama);
                 tanggal = itemView.findViewById(R.id.informasi_item_tanggal);
-                isi = itemView.findViewById(R.id.informasi_item_isi);
                 itemLayout = itemView.findViewById(R.id.informasi_item);
             }
         }

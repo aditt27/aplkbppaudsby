@@ -21,9 +21,19 @@ public class SessionManager {
 
     private static final String KEY_NIP = "nip";
     private static final String KEY_NAMA = "nama";
+
+    //Role
     private static final String KEY_KARYAWAN = "karyawan";
     private static final String KEY_PENGAWAS = "pengawas";
     private static final String KEY_ADMIN = "admin";
+
+    private static final String KEY_FUNGSIONAL = "fungsional";
+    private static final String KEY_PAMONG = "pamong";
+    private static final String KEY_PROGRAM = "program";
+    private static final String KEY_SIK = "sik";
+    private static final String KEY_PSD = "psd";
+    private static final String KEY_SUBBAG = "subbag";
+    private static final String KEY_WIYATA = "wiyata";
 
     //
     public SessionManager(Context context) {
@@ -32,15 +42,25 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public void createSession(String nip, String nama, Boolean karyawan, Boolean pengawas, Boolean admin) {
+    public void createSession(String nip, String nama, Boolean karyawan, Boolean pengawas, Boolean admin, Boolean fungsional, Boolean pamong, Boolean program, Boolean sik, Boolean psd, Boolean subbag, Boolean wiyata) {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_NIP, nip);
         editor.putString(KEY_NAMA, nama);
+
         editor.putBoolean(KEY_KARYAWAN, karyawan);
         editor.putBoolean(KEY_PENGAWAS, pengawas);
         editor.putBoolean(KEY_ADMIN, admin);
+
+        editor.putBoolean(KEY_FUNGSIONAL, fungsional);
+        editor.putBoolean(KEY_PAMONG, pamong);
+        editor.putBoolean(KEY_PROGRAM, program);
+        editor.putBoolean(KEY_SIK, sik);
+        editor.putBoolean(KEY_PSD, psd);
+        editor.putBoolean(KEY_SUBBAG, subbag);
+        editor.putBoolean(KEY_WIYATA, wiyata);
         editor.commit();
     }
+
 
     public HashMap getSession() {
         HashMap session = new HashMap();

@@ -4,45 +4,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="16dp"
-    android:id="@+id/informasi_item">
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardElevation="16dp">
+    android:id="@+id/informasi_item"
+    android:background="@android:color/white">
 
         <RelativeLayout
+            android:id="@+id/item"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
 
             <TextView
                 android:id="@+id/informasi_item_nama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="John Doe"
-                android:padding="8dp"/>
+                android:fontFamily="sans-serif-medium"
+                android:text="John Doe" />
 
             <TextView
                 android:id="@+id/informasi_item_tanggal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01/01/2000"
-                android:layout_alignParentEnd="true"
-                android:padding="8dp"/>
-
-            <TextView
-                android:id="@+id/informasi_item_isi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/informasi_item_nama"
-                android:paddingTop="8dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="16dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."/>
+                android:layout_below="@id/informasi_item_nama" />
 
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/item"
+        android:background="@android:color/black"/>
 
 </RelativeLayout>

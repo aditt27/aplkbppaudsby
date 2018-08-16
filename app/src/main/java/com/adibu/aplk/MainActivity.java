@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_main_logout:
                 mSessionManager.clearSession();
                 return true;
+            case R.id.menu_main_account:
+                Intent i = new Intent(MainActivity.this, AccountActivity.class);
+                startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }

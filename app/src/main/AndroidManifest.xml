@@ -3,6 +3,7 @@
     package="com.adibu.aplk">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".InformasiActivity"
@@ -27,8 +27,12 @@
             android:name=".LaporanActivity"
             android:label="@string/laporan" />
         <activity
-            android:label="@string/informasi_baru"
-            android:name=".TambahInformasiActivity"/>
+            android:name=".TambahInformasiActivity"
+            android:label="@string/informasi_baru" />
+        <activity android:name=".AccountActivity" />
+        <activity
+            android:name=".DetailInformasiActivity"
+            android:label="@string/detailpesan"/>
     </application>
 
 </manifest>

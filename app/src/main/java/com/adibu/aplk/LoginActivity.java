@@ -42,10 +42,10 @@ public class LoginActivity extends AppCompatActivity {
                 String password = mInputPassword.getText().toString().trim();
 
                 if(nip.isEmpty()) {
-                    mInputNip.setError("Required");
+                    mInputNip.setError("Wajib diisi");
                 }
                 if(password.isEmpty()) {
-                    mInputPassword.setError("Required");
+                    mInputPassword.setError("Wajib diisi");
                 }
                 if(!nip.isEmpty() && !password.isEmpty()) {
                     verifySignIn(nip, password);
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     private void verifySignIn(final String nip, final String password) {
 
         final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
+        pDialog.setMessage("Login...");
         pDialog.show();
 
         final String tag_sign_in = "tag_sign_in";
@@ -78,21 +78,22 @@ public class LoginActivity extends AppCompatActivity {
                         if(password.equals(pass)) {
                             String nama = jsonUser.getJSONObject(0).getString("nama");
 
-                            Boolean karyawan = false;
-                            Boolean pengawas = false;
-                            Boolean admin = false;
-                            if(jsonUser.getJSONObject(0).getInt("karyawan") == 1) {
-                                karyawan = true;
-                            }
-                            if(jsonUser.getJSONObject(0).getInt("pengawas") == 1) {
-                                pengawas = true;
-                            }
-                            if(jsonUser.getJSONObject(0).getInt("admin") ==1) {
-                                admin = true;
-                            }
+                            Boolean karyawan = jsonUser.getJSONObject(0).getInt("karyawan") == 1;
+                            Boolean pengawas = jsonUser.getJSONObject(0).getInt("pengawas") == 1;
+                            Boolean admin = jsonUser.getJSONObject(0).getInt("admin") == 1;
+                            Boolean fungsional = jsonUser.getJSONObject(0).getInt("fungsional") == 1;
+                            Boolean pamong = jsonUser.getJSONObject(0).getInt("pamong") == 1;
+                            Boolean program = jsonUser.getJSONObject(0).getInt("program") == 1;
+                            Boolean sik = jsonUser.getJSONObject(0).getInt("sik") == 1;
+                            Boolean psd = jsonUser.getJSONObject(0).getInt("psd") == 1;
+                            Boolean subbag = jsonUser.getJSONObject(0).getInt("subbag") == 1;
+                            Boolean wiyata = jsonUser.getJSONObject(0).getInt("wiyata") == 1;
 
                             SessionManager sessionManager = new SessionManager(LoginActivity.this);
-                            sessionManager.createSession(nip, nama, karyawan, pengawas, admin);
+                            sessionManager.createSession(nip, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata);
+                            if (pDialog.isShowing()) {
+                                pDialog.dismiss();
+                            }
                             finish();
                         } else {
                             if (pDialog.isShowing()) {
@@ -101,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setMessage(R.string.salahpassword);
                             builder.setPositiveButton(R.string.ok, null);
-                            builder.setTitle(R.string.error);
                             builder.show();
                         }
                     }
@@ -112,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                         builder.setMessage(R.string.salahnip);
                         builder.setPositiveButton(R.string.ok, null);
-                        builder.setTitle(R.string.error);
                         builder.show();
                     }
 

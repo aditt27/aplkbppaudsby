@@ -3,9 +3,10 @@
 
     <string name="informasi">Informasi</string>
     <string name="informasi_baru"> Tambah Info</string>
+    <string name="detailpesan">Detail Info</string>
     <string name="laporan">Laporan</string>
+    <string name="Akun">Akun</string>
 
-    <string name="adainfo">Ada Info?</string>
     <string name="kirim">Kirim</string>
     <string name="harus_diisi">Harus diisi</string>
 
@@ -18,4 +19,20 @@
     <string name="nip">NIP</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+
+    <string name="foto">Foto</string>
+    <string name="nullfoto">Tidak ada foto yang dilampirkan</string>
+    <string name="errorfoto">Terjadi kesalahan. Foto tidak dapat dimuat</string>
+    <string name="kirimke">Kirim ke</string>
+    <string name="pengirim">Pengirim</string>
+    <string name="pesan">Pesan</string>
+    <string name="tanggal">Tanggal</string>
+
+    <string name="fungsional">Fungsional</string>
+    <string name="pamong">Pamong</string>
+    <string name="program">Program</string>
+    <string name="sik">SIK</string>
+    <string name="psd">PSD</string>
+    <string name="subbag">Subbag</string>
+    <string name="wiyata">Wiyata</string>
 </resources>
