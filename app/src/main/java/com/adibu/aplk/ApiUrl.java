@@ -7,7 +7,7 @@ public class ApiUrl {
     public static final String URL_CREATE_MSG = ROOT_API_URL + "c_info";  //POST , params: nip, isi, pic(optional), a(fungsional),b(pamong),c(program),d(sik),e(psd),f(subbag),g(wiyata)
     public static final String URL_READ_INFO_DITERIMA = ROOT_API_URL + "r_info_nip&nip="; //GET , params: nip
 	public static final String URL_READ_INFO_TERKIRIM = ROOT_API_URL + "r_sent_all&nip="; //GET , params: nip (ambil semua pesan yang dikirim oleh nip)
-	//"r_sent&no=" params: no (ambil status transaksi pada nomor informasi)
+	//"r_sent&no=" params: no (ambil status transaksi dari nomor informasi)
     public static final String URL_UPDATE_MSG = ROOT_API_URL + "updatemsg"; //POST , params: no, isi
     public static final String URL_DELETE_MSG = ROOT_API_URL + "deletemsg&no="; //GET , params: no
 
@@ -20,4 +20,7 @@ public class ApiUrl {
 
     //Image
     public static final String URL_CREATE_INFO_UP = ROOT_API_URL + "up_img_info_update&no="; //POST , params: pic, no
+
+	//Notifikasi
+	public static final String URL_REG_DEVICE = ROOT_API_URL + "c_device"; //POST, params: nip, token
 }
