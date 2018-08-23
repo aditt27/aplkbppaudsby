@@ -20,4 +20,7 @@ public class ApiUrl {
 
     //Image
     public static final String URL_CREATE_INFO_UP = ROOT_API_URL + "up_img_info_update&no="; //POST , params: pic, no
+	
+	//Notifikasi
+	public static final String URL_REG_DEVICE = ROOT_API_URL + "c_device"; //POST, params: nip, token
 }
