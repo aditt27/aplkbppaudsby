@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="sansserif">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.adibu.aplk;
+package com.adibu.aplk.informasi;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.adibu.aplk.ApiUrl;
+import com.adibu.aplk.AppSingleton;
+import com.adibu.aplk.R;
+import com.adibu.aplk.SessionManager;
+import com.adibu.aplk.VolleyMultiPartRequest;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -28,11 +33,10 @@ import com.android.volley.toolbox.StringRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TambahInformasiActivity extends AppCompatActivity {
+public class InformasiTambahActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 1;
 
@@ -45,7 +49,7 @@ public class TambahInformasiActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tambah_informasi);
+        setContentView(R.layout.activity_informasi_tambah);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

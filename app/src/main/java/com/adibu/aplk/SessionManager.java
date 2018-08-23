@@ -19,21 +19,21 @@ public class SessionManager {
 
     private static final String IS_LOGIN = "isLogin";
 
-    private static final String KEY_NIP = "nip";
-    private static final String KEY_NAMA = "nama";
+    public static final String KEY_NIP = "nip";
+    public static final String KEY_NAMA = "nama";
 
     //Role
-    private static final String KEY_KARYAWAN = "karyawan";
-    private static final String KEY_PENGAWAS = "pengawas";
-    private static final String KEY_ADMIN = "admin";
+    public static final String KEY_KARYAWAN = "karyawan";
+    public static final String KEY_PENGAWAS = "pengawas";
+    public static final String KEY_ADMIN = "admin";
 
-    private static final String KEY_FUNGSIONAL = "fungsional";
-    private static final String KEY_PAMONG = "pamong";
-    private static final String KEY_PROGRAM = "program";
-    private static final String KEY_SIK = "sik";
-    private static final String KEY_PSD = "psd";
-    private static final String KEY_SUBBAG = "subbag";
-    private static final String KEY_WIYATA = "wiyata";
+    public static final String KEY_FUNGSIONAL = "fungsional";
+    public static final String KEY_PAMONG = "pamong";
+    public static final String KEY_PROGRAM = "program";
+    public static final String KEY_SIK = "sik";
+    public static final String KEY_PSD = "psd";
+    public static final String KEY_SUBBAG = "subbag";
+    public static final String KEY_WIYATA = "wiyata";
 
     //
     public SessionManager(Context context) {
@@ -66,9 +66,19 @@ public class SessionManager {
         HashMap session = new HashMap();
         session.put(KEY_NIP, pref.getString(KEY_NIP, null));
         session.put(KEY_NAMA, pref.getString(KEY_NAMA, null));
+
         session.put(KEY_KARYAWAN, pref.getBoolean(KEY_KARYAWAN, false));
         session.put(KEY_PENGAWAS, pref.getBoolean(KEY_PENGAWAS, false));
         session.put(KEY_ADMIN, pref.getBoolean(KEY_ADMIN, false));
+
+        session.put(KEY_FUNGSIONAL, pref.getBoolean(KEY_FUNGSIONAL, false));
+        session.put(KEY_PAMONG, pref.getBoolean(KEY_PAMONG, false));
+        session.put(KEY_PROGRAM, pref.getBoolean(KEY_PROGRAM, false));
+        session.put(KEY_SIK, pref.getBoolean(KEY_SIK, false));
+        session.put(KEY_PSD, pref.getBoolean(KEY_PSD, false));
+        session.put(KEY_SUBBAG, pref.getBoolean(KEY_SUBBAG, false));
+        session.put(KEY_WIYATA, pref.getBoolean(KEY_WIYATA, false));
+
         return session;
     }
 

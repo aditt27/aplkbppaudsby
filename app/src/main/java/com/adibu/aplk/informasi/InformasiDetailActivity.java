@@ -1,27 +1,29 @@
-package com.adibu.aplk;
+package com.adibu.aplk.informasi;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.CardView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.adibu.aplk.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-public class DetailInformasiActivity extends AppCompatActivity {
+public class InformasiDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_informasi);
+        setContentView(R.layout.activity_informasi_detail);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        CardView namaCV = findViewById(R.id.detail_informasi_card_nama);
         TextView namaTV = findViewById(R.id.detail_informasi_nama);
         TextView isiTV = findViewById(R.id.detail_informasi_isi);
         ImageView fotoIV = findViewById(R.id.detail_informasi_foto);
@@ -31,7 +33,13 @@ public class DetailInformasiActivity extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        namaTV.setText(i.getStringExtra("nama"));
+        String nama = i.getStringExtra("nama");
+        if(nama==null) {
+            namaCV.setVisibility(View.GONE);
+        } else {
+            namaTV.setText(nama);
+        }
+
         isiTV.setText(i.getStringExtra("isi"));
         tanggalTV.setText(i.getStringExtra("waktu"));
 

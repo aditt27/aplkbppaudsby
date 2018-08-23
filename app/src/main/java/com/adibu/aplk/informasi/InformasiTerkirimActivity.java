@@ -1,4 +1,4 @@
-package com.adibu.aplk;
+package com.adibu.aplk.informasi;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,13 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.adibu.aplk.ApiUrl;
+import com.adibu.aplk.AppSingleton;
+import com.adibu.aplk.R;
+import com.adibu.aplk.SessionManager;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,24 +30,24 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class InformasiActivity extends AppCompatActivity {
+public class InformasiTerkirimActivity extends AppCompatActivity {
 
     private ArrayList<InformasiModel> mListInformasi = new ArrayList<>();
-    private InformasiRecyclerViewAdapter mInformasiRVAdapter;
+    private InformasiTerkirimRVAdapter mInformasiTerkirimRVAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_informasi);
+        setContentView(R.layout.activity_informasi_list);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = findViewById(R.id.informasi_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        mInformasiRVAdapter = new InformasiRecyclerViewAdapter(mListInformasi);
-        recyclerView.setAdapter(mInformasiRVAdapter);
+        mInformasiTerkirimRVAdapter = new InformasiTerkirimRVAdapter(mListInformasi);
+        recyclerView.setAdapter(mInformasiTerkirimRVAdapter);
 
         //Reverse Item (Newest one in the top)
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -57,7 +59,7 @@ public class InformasiActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(InformasiActivity.this, TambahInformasiActivity.class));
+                startActivity(new Intent(InformasiTerkirimActivity.this, InformasiTambahActivity.class));
             }
         });
 
@@ -65,14 +67,14 @@ public class InformasiActivity extends AppCompatActivity {
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getListInformasi();
+                getListInformasiTerkirim();
             }
         });
 
         //RefreshAnimation
         mSwipeRefresh.setRefreshing(true);
         //Ambil Data informasi dari DB
-        getListInformasi();
+        getListInformasiTerkirim();
     }
 
     @Override
@@ -85,10 +87,10 @@ public class InformasiActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getListInformasi() {
+    private void getListInformasiTerkirim() {
         SessionManager sm = new SessionManager(getApplicationContext());
         String tag_get_listInformasi = "tag_get_listInformasi";
-        String url = ApiUrl.URL_READ_MSGS+sm.getSessionNIP();
+        String url = ApiUrl.URL_READ_INFO_TERKIRIM + sm.getSessionNIP();
 
 
         JsonObjectRequest jsonListInformasi = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -103,18 +105,16 @@ public class InformasiActivity extends AppCompatActivity {
 
                     //masukin yg ada di jsonarray ke arraylist informasi
                     for(int i=0;i<jsonListInformasi.length();i++) {
-                        int no = jsonListInformasi.getJSONObject(i).getInt("no");
-                        String nama = jsonListInformasi.getJSONObject(i).getString("nama");
+                        int no = jsonListInformasi.getJSONObject(i).getInt("no_info");
                         String waktu = jsonListInformasi.getJSONObject(i).getString("waktu");
                         String isi = jsonListInformasi.getJSONObject(i).getString("isi");
                         String gambar = jsonListInformasi.getJSONObject(i).getString("gambar");
-                        int status = jsonListInformasi.getJSONObject(i).getInt("status");
                         //masukin ke arraylistnya descending order, masukin ke index 0 terus tiap item
-                        mListInformasi.add(new InformasiModel(no, nama, waktu, isi, gambar, status));
+                        mListInformasi.add(new InformasiModel(no, "", waktu, isi, gambar, -1));
                     }
 
                     //update adapter setelah masukin ke arraylist informasi
-                    mInformasiRVAdapter.notifyDataSetChanged();
+                    mInformasiTerkirimRVAdapter.notifyDataSetChanged();
 
                     //selesai swipe refresh
                     mSwipeRefresh.setRefreshing(false);
@@ -134,83 +134,34 @@ public class InformasiActivity extends AppCompatActivity {
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonListInformasi, tag_get_listInformasi);
     }
 
-    private class InformasiModel {
-        /*
-        Data model untuk bagian informasi
-        */
-
-        private int no;
-        private String nama;
-        private String waktu;
-        private String isi;
-        private String gambar;
-        private int status;
-
-        public InformasiModel(int no, String nama, String waktu, String isi, String gambar, int status) {
-            this.no = no;
-            this.nama = nama;
-            this.waktu = waktu;
-            this.isi = isi;
-            this.gambar = gambar;
-            this.status = status;
-        }
-
-        public int getNo() {
-            return no;
-        }
-
-        public String getNama() {
-            return nama;
-        }
-
-        public String getWaktu() {
-            return waktu;
-        }
-
-        public String getIsi() {
-            return isi;
-        }
-
-        public String getGambar() {
-            return gambar;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-    }
-
-    public class InformasiRecyclerViewAdapter extends RecyclerView.Adapter<InformasiRecyclerViewAdapter.ViewHolder>{
+    public class InformasiTerkirimRVAdapter extends RecyclerView.Adapter<InformasiTerkirimRVAdapter.ViewHolder>{
 
         private ArrayList<InformasiModel> listInformasi;
 
-        public InformasiRecyclerViewAdapter(ArrayList<InformasiModel> mListInformasi) {
+        public InformasiTerkirimRVAdapter(ArrayList<InformasiModel> mListInformasi) {
             this.listInformasi = mListInformasi;
         }
 
         @NonNull
         @Override
-        public InformasiRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public InformasiTerkirimRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.informasi_item, parent, false);
-            InformasiRecyclerViewAdapter.ViewHolder viewHolder = new InformasiRecyclerViewAdapter.ViewHolder(view);
+            InformasiTerkirimRVAdapter.ViewHolder viewHolder = new InformasiTerkirimActivity.InformasiTerkirimRVAdapter.ViewHolder(view);
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final InformasiRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.nama.setText(listInformasi.get(position).getNama());
+        public void onBindViewHolder(@NonNull final InformasiTerkirimRVAdapter.ViewHolder holder, int position) {
+            holder.isi.setText("\""+listInformasi.get(position).getIsi()+"\"");
             holder.tanggal.setText(listInformasi.get(position).getWaktu());
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(getApplicationContext(), String.valueOf(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(InformasiActivity.this, DetailInformasiActivity.class);
+                    Intent i = new Intent(InformasiTerkirimActivity.this, InformasiDetailActivity.class);
                     i.putExtra("no", listInformasi.get(holder.getAdapterPosition()).getNo());
-                    i.putExtra("nama", listInformasi.get(holder.getAdapterPosition()).getNama());
                     i.putExtra("waktu", listInformasi.get(holder.getAdapterPosition()).getWaktu());
                     i.putExtra("isi", listInformasi.get(holder.getAdapterPosition()).getIsi());
                     i.putExtra("gambar", listInformasi.get(holder.getAdapterPosition()).getGambar());
-                    i.putExtra("status", listInformasi.get(holder.getAdapterPosition()).getStatus());
                     startActivity(i);
                 }
             });
@@ -223,17 +174,20 @@ public class InformasiActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            TextView nama;
+            TextView isi;
             TextView tanggal;
 
             RelativeLayout itemLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                nama = itemView.findViewById(R.id.informasi_item_nama);
+                isi = itemView.findViewById(R.id.informasi_item_nama);
+                //ganti font family karena informasi terkirim
+                isi.setTextAppearance(getBaseContext(), R.style.sansserif);
                 tanggal = itemView.findViewById(R.id.informasi_item_tanggal);
                 itemLayout = itemView.findViewById(R.id.informasi_item);
             }
         }
     }
+
 }

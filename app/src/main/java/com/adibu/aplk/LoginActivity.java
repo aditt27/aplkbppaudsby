@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                             Boolean subbag = jsonUser.getJSONObject(0).getInt("subbag") == 1;
                             Boolean wiyata = jsonUser.getJSONObject(0).getInt("wiyata") == 1;
 
-                            SessionManager sessionManager = new SessionManager(LoginActivity.this);
+                            SessionManager sessionManager = new SessionManager(getApplicationContext());
                             sessionManager.createSession(nip, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata);
                             if (pDialog.isShowing()) {
                                 pDialog.dismiss();

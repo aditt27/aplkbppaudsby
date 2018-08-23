@@ -21,18 +21,26 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity
-            android:name=".InformasiActivity"
-            android:label="@string/informasi" />
+            android:name=".informasi.InformasiDiterimaActivity"
+            android:label="@string/infoditerima" />
         <activity
             android:name=".LaporanActivity"
             android:label="@string/laporan" />
         <activity
-            android:name=".TambahInformasiActivity"
+            android:name=".informasi.InformasiTambahActivity"
             android:label="@string/informasi_baru" />
-        <activity android:name=".AccountActivity" />
         <activity
-            android:name=".DetailInformasiActivity"
-            android:label="@string/detailpesan"/>
+            android:name=".AccountActivity"
+            android:label="@string/Akun"/>
+        <activity
+            android:name=".informasi.InformasiDetailActivity"
+            android:label="@string/detailpesan" />
+        <activity
+            android:name=".informasi.InformasiMain"
+            android:label="@string/informasi"/>
+        <activity
+            android:name=".informasi.InformasiTerkirimActivity"
+            android:label="@string/infoterkirim"/>
     </application>
 
 </manifest>

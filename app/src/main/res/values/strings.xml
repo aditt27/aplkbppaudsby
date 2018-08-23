@@ -6,6 +6,12 @@
     <string name="detailpesan">Detail Info</string>
     <string name="laporan">Laporan</string>
     <string name="Akun">Akun</string>
+    <string name="nama">Nama</string>
+    <string name="role">Role</string>
+    <string name="gantipassword">Ganti Password</string>
+
+    <string name="infoterkirim">Info Terkirim</string>
+    <string name="infoditerima">Info Diterima</string>
 
     <string name="kirim">Kirim</string>
     <string name="harus_diisi">Harus diisi</string>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TambahInformasiActivity">
+    tools:context=".informasi.InformasiTambahActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,6 +20,7 @@
             android:text="@string/informasi" />
 
         <EditText
+            android:inputType="text"
             android:id="@+id/tambah_info_edittext_informasi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

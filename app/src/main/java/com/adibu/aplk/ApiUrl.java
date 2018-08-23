@@ -5,9 +5,9 @@ public class ApiUrl {
 
     //Informasi
     public static final String URL_CREATE_MSG = ROOT_API_URL + "c_info";  //POST , params: nip, isi, pic(optional), a(fungsional),b(pamong),c(program),d(sik),e(psd),f(subbag),g(wiyata)
-    public static final String URL_READ_MSGS = ROOT_API_URL + "r_info_nip&nip="; //GET , params: nip
-	//"r_sent_all&nip=" params: nip (ambil semua pesan yang dikirim oleh nip)
-	//"r_status&no=" params: no (ambil status transaksi pada nomor informasi)
+    public static final String URL_READ_INFO_DITERIMA = ROOT_API_URL + "r_info_nip&nip="; //GET , params: nip
+	public static final String URL_READ_INFO_TERKIRIM = ROOT_API_URL + "r_sent_all&nip="; //GET , params: nip (ambil semua pesan yang dikirim oleh nip)
+	//"r_sent&no=" params: no (ambil status transaksi pada nomor informasi)
     public static final String URL_UPDATE_MSG = ROOT_API_URL + "updatemsg"; //POST , params: no, isi
     public static final String URL_DELETE_MSG = ROOT_API_URL + "deletemsg&no="; //GET , params: no
 
