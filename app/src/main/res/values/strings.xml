@@ -34,6 +34,12 @@
     <string name="pesan">Pesan</string>
     <string name="tanggal">Tanggal</string>
 
+
+    <!--Role-->
+    <string name="admin">Admin</string>
+    <string name="pengawas">Pengawas</string>
+    <string name="karyawan">Karyawan</string>
+
     <string name="fungsional">Fungsional</string>
     <string name="pamong">Pamong</string>
     <string name="program">Program</string>

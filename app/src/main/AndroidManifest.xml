@@ -31,16 +31,33 @@
             android:label="@string/informasi_baru" />
         <activity
             android:name=".AccountActivity"
-            android:label="@string/Akun"/>
+            android:label="@string/Akun" />
         <activity
             android:name=".informasi.InformasiDetailActivity"
             android:label="@string/detailpesan" />
         <activity
             android:name=".informasi.InformasiMain"
-            android:label="@string/informasi"/>
+            android:label="@string/informasi" />
         <activity
             android:name=".informasi.InformasiTerkirimActivity"
-            android:label="@string/infoterkirim"/>
+            android:label="@string/infoterkirim" />
+
+        <service android:name=".firebase.MyFirebaseInstanceIdService">
+
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+
+        </service>
+
+        <service
+            android:name=".firebase.MyFirebaseMessagingService">
+
+            <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>

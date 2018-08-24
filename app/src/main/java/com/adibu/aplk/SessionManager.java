@@ -35,7 +35,10 @@ public class SessionManager {
     public static final String KEY_SUBBAG = "subbag";
     public static final String KEY_WIYATA = "wiyata";
 
-    //
+    //FIREBASE
+    public static final String KEY_FIREBASE_DEVICE_TOKEN = "firebase_device_token";
+
+
     public SessionManager(Context context) {
         this.context = context;
         pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -61,7 +64,6 @@ public class SessionManager {
         editor.commit();
     }
 
-
     public HashMap getSession() {
         HashMap session = new HashMap();
         session.put(KEY_NIP, pref.getString(KEY_NIP, null));
@@ -86,6 +88,15 @@ public class SessionManager {
         return pref.getString(KEY_NIP, null);
     }
 
+    public void setFirebaseDeviceToken(String token) {
+        editor.putString(KEY_FIREBASE_DEVICE_TOKEN, token);
+        editor.commit();
+    }
+
+    public String getFirebaseDeviceToken() {
+        return pref.getString(KEY_FIREBASE_DEVICE_TOKEN, null);
+    }
+
     public void checkLogin(){
         // Check login status
         if(!this.isLoggedIn()){
@@ -105,7 +116,6 @@ public class SessionManager {
     public Boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGIN, false);
     }
-
 
 
     private void startLoginActivity() {

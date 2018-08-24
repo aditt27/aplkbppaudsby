@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.adibu.aplk.firebase.MyFirebaseInstanceIdService;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -91,6 +92,9 @@ public class LoginActivity extends AppCompatActivity {
 
                             SessionManager sessionManager = new SessionManager(getApplicationContext());
                             sessionManager.createSession(nip, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata);
+
+                            MyFirebaseInstanceIdService firebaseInstanceIdService = new MyFirebaseInstanceIdService(getApplicationContext());
+                            firebaseInstanceIdService.onTokenRefresh();
                             if (pDialog.isShowing()) {
                                 pDialog.dismiss();
                             }
@@ -127,6 +131,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(this).addToRequestQueue(jsonGetUserData, tag_sign_in);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonGetUserData, tag_sign_in);
     }
 }
