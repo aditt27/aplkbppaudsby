@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,11 +90,11 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
 
     private void getListInformasiTerkirim() {
         SessionManager sm = new SessionManager(getApplicationContext());
-        String tag_get_listInformasi = "tag_get_listInformasi";
-        String url = ApiUrl.URL_READ_INFO_TERKIRIM + sm.getSessionNIP();
+        String TAG = "READ_INFOS_TERKIRIM";
+        String URL = ApiUrl.URL_READ_INFOS_TERKIRIM + sm.getSessionNIP();
 
 
-        JsonObjectRequest jsonListInformasi = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -120,7 +121,7 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
                     mSwipeRefresh.setRefreshing(false);
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    e.fillInStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
@@ -131,7 +132,7 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
         });
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonListInformasi, tag_get_listInformasi);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
 
     public class InformasiTerkirimRVAdapter extends RecyclerView.Adapter<InformasiTerkirimRVAdapter.ViewHolder>{
@@ -158,10 +159,11 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(InformasiTerkirimActivity.this, InformasiDetailActivity.class);
-                    i.putExtra("no", listInformasi.get(holder.getAdapterPosition()).getNo());
+                    i.putExtra("no", String.valueOf(listInformasi.get(holder.getAdapterPosition()).getNo()));
                     i.putExtra("waktu", listInformasi.get(holder.getAdapterPosition()).getWaktu());
                     i.putExtra("isi", listInformasi.get(holder.getAdapterPosition()).getIsi());
                     i.putExtra("gambar", listInformasi.get(holder.getAdapterPosition()).getGambar());
+                    i.putExtra("dari", "terkirim");
                     startActivity(i);
                 }
             });

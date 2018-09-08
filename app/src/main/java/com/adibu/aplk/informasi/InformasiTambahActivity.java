@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 
 import com.adibu.aplk.ApiUrl;
@@ -119,7 +119,7 @@ public class InformasiTambahActivity extends AppCompatActivity {
                 mBitmapGambar = MediaStore.Images.Media.getBitmap(getContentResolver(), image);
                 mGambarInfo.setImageBitmap(mBitmapGambar);
             } catch (IOException e) {
-                e.printStackTrace();
+                e.fillInStackTrace();
             }
         }
 
@@ -127,13 +127,13 @@ public class InformasiTambahActivity extends AppCompatActivity {
     }
 
     private void addInfo(final String info) {
-        String tag_add_info = "tag_add_info";
-        String url = ApiUrl.URL_CREATE_MSG;
+        final String TAG = "CREATE_INFO";
+        String URL = ApiUrl.URL_CREATE_INFO;
 
-        StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "StringRequest: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -142,7 +142,7 @@ public class InformasiTambahActivity extends AppCompatActivity {
             }
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 SessionManager sm = new SessionManager(getApplicationContext());
                 Map<String, String> params = new HashMap<>();
                 params.put("nip", sm.getSessionNIP());
@@ -159,18 +159,18 @@ public class InformasiTambahActivity extends AppCompatActivity {
         };
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(sr, tag_add_info);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest, TAG);
     }
 
     private void addInfo(final String info, final Bitmap image) {
-        String tag_add_info = "tag_add_info";
-        String url = ApiUrl.URL_CREATE_MSG;
+        final String TAG = "CREATE_INFO";
+        String URL = ApiUrl.URL_CREATE_INFO;
 
-        VolleyMultiPartRequest volleyMultipartRequest = new VolleyMultiPartRequest(Request.Method.POST, url,
+        VolleyMultiPartRequest multiPartRequest = new VolleyMultiPartRequest(Request.Method.POST, URL,
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
-                        Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Multipart: " + response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -209,7 +209,7 @@ public class InformasiTambahActivity extends AppCompatActivity {
         };
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(volleyMultipartRequest, tag_add_info);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest, TAG);
 
     }
 

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,11 +90,10 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
 
     private void getListInformasiDiterima() {
         SessionManager sm = new SessionManager(getApplicationContext());
-        String tag_get_listInformasi = "tag_get_listInformasi";
-        String url = ApiUrl.URL_READ_INFO_DITERIMA +sm.getSessionNIP();
+        String TAG = "READ_INFOS_DITERIMA";
+        String URL = ApiUrl.URL_READ_INFOS_DITERIMA + sm.getSessionNIP();
 
-
-        JsonObjectRequest jsonListInformasi = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -105,13 +105,12 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
 
                     //masukin yg ada di jsonarray ke arraylist informasi
                     for(int i=0;i<jsonListInformasi.length();i++) {
-                        int no = jsonListInformasi.getJSONObject(i).getInt("no");
                         String nama = jsonListInformasi.getJSONObject(i).getString("nama");
                         String waktu = jsonListInformasi.getJSONObject(i).getString("waktu");
                         String isi = jsonListInformasi.getJSONObject(i).getString("isi");
                         String gambar = jsonListInformasi.getJSONObject(i).getString("gambar");
                         int status = jsonListInformasi.getJSONObject(i).getInt("status");
-                        //masukin ke arraylistnya descending order, masukin ke index 0 terus tiap item
+                        int no = jsonListInformasi.getJSONObject(i).getInt("no");
                         mListInformasi.add(new InformasiModel(no, nama, waktu, isi, gambar, status));
                     }
 
@@ -133,7 +132,7 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
         });
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonListInformasi, tag_get_listInformasi);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
 
     public class InformasiDiterimaRVAdapter extends RecyclerView.Adapter<InformasiDiterimaRVAdapter.ViewHolder>{
@@ -159,14 +158,14 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(getApplicationContext(), String.valueOf(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(InformasiDiterimaActivity.this, InformasiDetailActivity.class);
-                    i.putExtra("no", listInformasi.get(holder.getAdapterPosition()).getNo());
+                    i.putExtra("no", String.valueOf(listInformasi.get(holder.getAdapterPosition()).getNo()));
                     i.putExtra("nama", listInformasi.get(holder.getAdapterPosition()).getNama());
                     i.putExtra("waktu", listInformasi.get(holder.getAdapterPosition()).getWaktu());
                     i.putExtra("isi", listInformasi.get(holder.getAdapterPosition()).getIsi());
                     i.putExtra("gambar", listInformasi.get(holder.getAdapterPosition()).getGambar());
                     i.putExtra("status", listInformasi.get(holder.getAdapterPosition()).getStatus());
+                    i.putExtra("dari", "diterima");
                     startActivity(i);
                 }
             });

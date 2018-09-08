@@ -53,12 +53,12 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
         mSessionManager.setFirebaseDeviceToken(token);
 
         //Store token on the database
-        final String tag_store_token = "tag_store_token";
-        String url = ApiUrl.URL_REG_DEVICE;
-        StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        final String TAG = "REG_DEVICE";
+        String URL = ApiUrl.URL_REG_DEVICE;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(tag_store_token, response);
+                Log.d(TAG, response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -76,7 +76,7 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
         };
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(mContext).addToRequestQueue(sr, tag_store_token);
+        AppSingleton.getInstance(mContext).addToRequestQueue(stringRequest, TAG);
     }
 
 

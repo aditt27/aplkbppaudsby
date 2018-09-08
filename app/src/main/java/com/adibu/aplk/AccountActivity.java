@@ -3,6 +3,8 @@ package com.adibu.aplk;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -17,6 +19,15 @@ public class AccountActivity extends AppCompatActivity {
         TextView namaTV = findViewById(R.id.akun_nama);
         TextView nipTV = findViewById(R.id.akun_nip);
         TextView roleTV = findViewById(R.id.akun_role);
+        Button testNotif = findViewById(R.id.test_notifikasi);
+
+        testNotif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyNotificationManager notifMgr = new MyNotificationManager(getApplicationContext());
+                notifMgr.showSmallNotification("Test Title", "Test Message");;
+            }
+        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
