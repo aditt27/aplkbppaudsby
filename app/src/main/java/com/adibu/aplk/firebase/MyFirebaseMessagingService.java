@@ -1,11 +1,7 @@
 package com.adibu.aplk.firebase;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
-import com.adibu.aplk.MainActivity;
 import com.adibu.aplk.MyNotificationManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -42,7 +38,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             //if there is no image
             if(imageUrl.equals("null")){
-                mNotificationManager.showSmallNotification(title, message);
+                mNotificationManager.showInformasiNotification(title, message);
             }else{
                 mNotificationManager.showBigNotification(title, message, imageUrl);
             }

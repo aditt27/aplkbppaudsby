@@ -32,10 +32,12 @@ public class MyNotificationManager {
 
     private Context mContext;
     private NotificationManager mNotificationManager;
+    private SessionManager mSessionManager;
 
     public MyNotificationManager(Context mContext) {
         this.mContext = mContext;
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mSessionManager = new SessionManager(mContext);
         createNotificationChannel();
     }
 
@@ -59,10 +61,12 @@ public class MyNotificationManager {
                 .setAutoCancel(true)
                 .build();
 
-        mNotificationManager.notify(0, notification);
+        int id = mSessionManager.getNotificationId();
+        mNotificationManager.notify(id, notification);
+        summaryNotificatiton();
     }
 
-    public void showSmallNotification(String title, String message) {
+    public void showInformasiNotification(String title, String message) {
 
         Intent intent = new Intent(mContext, InformasiDiterimaActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -80,10 +84,34 @@ public class MyNotificationManager {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setChannelId(INFORMASI_CHANNEL)
+                .setGroup(INFORMASI_CHANNEL)
                 .build();
 
-        mNotificationManager.notify(0, notification);
+        int id = mSessionManager.getNotificationId();
+        mNotificationManager.notify(id, notification);
+        summaryNotificatiton();
+    }
 
+    private void summaryNotificatiton() {
+        //use constant ID for notification used as group summary
+        int SUMMARY_ID = 0;
+
+        Notification summaryNotification =
+                new NotificationCompat.Builder(mContext, INFORMASI_CHANNEL)
+                        .setContentTitle("Informasi Baru")
+                        //set content text to support devices running API level < 24
+                        .setContentText("Informasi Baru")
+                        .setSmallIcon(android.R.drawable.ic_menu_add)
+                        //build summary info into InboxStyle template
+                        .setStyle(new NotificationCompat.InboxStyle()
+                                .setSummaryText("Informasi Baru"))
+                        //specify which group this notification belongs to
+                        .setGroup(INFORMASI_CHANNEL)
+                        //set this notification as the summary for the group
+                        .setGroupSummary(true)
+                        .build();
+
+        mNotificationManager.notify(SUMMARY_ID, summaryNotification);
     }
 
     private void createNotificationChannel() {
@@ -92,11 +120,11 @@ public class MyNotificationManager {
             //Create channel
             NotificationChannel channel1 = new NotificationChannel(INFORMASI_CHANNEL, mContext.getString(R.string.informasi), NotificationManager.IMPORTANCE_DEFAULT);
             channel1.enableLights(true);
-            channel1.setVibrationPattern(new long[]{0, 1000, 500, 500});
+            channel1.setVibrationPattern(new long[]{600, 250, 250});
 
             NotificationChannel channel2 = new NotificationChannel(LAPORAN_CHANNEL, mContext.getString(R.string.laporan), NotificationManager.IMPORTANCE_DEFAULT);
             channel2.enableLights(true);
-            channel2.setVibrationPattern(new long[]{0, 1000, 500, 500});
+            channel2.setVibrationPattern(new long[]{600, 250, 250});
 
             //Assign channel
             mNotificationManager.createNotificationChannel(channel1);

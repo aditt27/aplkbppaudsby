@@ -14,21 +14,22 @@
             android:layout_margin="16dp">
 
             <TextView
-                android:id="@+id/informasi_item_nama"
+                android:id="@+id/list_item_nama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:text="John Doe" />
 
             <TextView
-                android:id="@+id/informasi_item_tanggal"
+                android:id="@+id/list_item_tanggal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01/01/2000"
-                android:layout_below="@id/informasi_item_nama" />
+                android:layout_below="@id/list_item_nama" />
 
         </RelativeLayout>
     <View
+        android:id="@+id/detail_informasi_bar"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/item"

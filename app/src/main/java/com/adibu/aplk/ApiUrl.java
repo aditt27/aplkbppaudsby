@@ -19,7 +19,7 @@ public class ApiUrl {
     public static final String URL_CREATE_USER = ROOT_API_URL + "c_user"; //POST, params: nip, password, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata
     public static final String URL_READ_USERS = ROOT_API_URL + "r_user"; //GET , no params
     public static final String URL_READ_USER = ROOT_API_URL + "r_user_nip&nip="; //GET , params: nip
-	//"u_pass&nip=" params: nip, password
+	public static final String URL_UPDATE_USER_PASS = "u_pass&nip="; //GET, params: nip, password
     public static final String URL_UPDATE_USER = ROOT_API_URL + "updateuser"; //POST , params: nip, nama
     public static final String URL_DELETE_USER = ROOT_API_URL + "deleteuser&no="; //GET , params: nip
 

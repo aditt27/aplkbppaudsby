@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -146,19 +145,25 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
         @NonNull
         @Override
         public InformasiDiterimaRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.informasi_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
             InformasiDiterimaRVAdapter.ViewHolder viewHolder = new InformasiDiterimaRVAdapter.ViewHolder(view);
             return viewHolder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull final InformasiDiterimaRVAdapter.ViewHolder holder, int position) {
-            holder.nama.setText(listInformasi.get(position).getNama());
+            String isiNama = listInformasi.get(position).getNama();
+            if(listInformasi.get(position).getStatus()==0) {
+                isiNama = isiNama + " " + "(Baru)";
+            }
+            holder.nama.setText(isiNama);
             holder.tanggal.setText(listInformasi.get(position).getWaktu());
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    holder.nama.setText(listInformasi.get(holder.getAdapterPosition()).getNama());
                     Intent i = new Intent(InformasiDiterimaActivity.this, InformasiDetailActivity.class);
+                    //Integer diubah menjadi string agar mudah
                     i.putExtra("no", String.valueOf(listInformasi.get(holder.getAdapterPosition()).getNo()));
                     i.putExtra("nama", listInformasi.get(holder.getAdapterPosition()).getNama());
                     i.putExtra("waktu", listInformasi.get(holder.getAdapterPosition()).getWaktu());
@@ -185,8 +190,8 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                nama = itemView.findViewById(R.id.informasi_item_nama);
-                tanggal = itemView.findViewById(R.id.informasi_item_tanggal);
+                nama = itemView.findViewById(R.id.list_item_nama);
+                tanggal = itemView.findViewById(R.id.list_item_tanggal);
                 itemLayout = itemView.findViewById(R.id.informasi_item);
             }
         }

@@ -25,7 +25,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MyNotificationManager notifMgr = new MyNotificationManager(getApplicationContext());
-                notifMgr.showSmallNotification("Test Title", "Test Message");;
+                notifMgr.showInformasiNotification("title", "message");
             }
         });
 

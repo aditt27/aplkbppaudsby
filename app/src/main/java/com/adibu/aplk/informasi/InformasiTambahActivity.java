@@ -181,7 +181,7 @@ public class InformasiTambahActivity extends AppCompatActivity {
                 }) {
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 SessionManager sm = new SessionManager(getApplicationContext());
                 Map<String, String> params = new HashMap<>();
                 params.put("nip", sm.getSessionNIP());

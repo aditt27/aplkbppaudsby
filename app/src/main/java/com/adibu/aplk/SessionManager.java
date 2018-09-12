@@ -35,6 +35,9 @@ public class SessionManager {
     public static final String KEY_SUBBAG = "subbag";
     public static final String KEY_WIYATA = "wiyata";
 
+    //Notification
+    public static final String KEY_NOTIFICATION_ID = "notification_id";
+
     //FIREBASE
     public static final String KEY_FIREBASE_DEVICE_TOKEN = "firebase_device_token";
 
@@ -129,6 +132,13 @@ public class SessionManager {
 
         // Starting Login Activity
         context.startActivity(i);
+    }
+
+    public int getNotificationId() {
+        int id = pref.getInt(KEY_NOTIFICATION_ID, 0) + 1;
+        if (id == Integer.MAX_VALUE) { id = 0; }
+        editor.putInt(KEY_NOTIFICATION_ID, id).commit();
+        return id;
     }
 
 }

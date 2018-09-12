@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -146,7 +145,7 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
         @NonNull
         @Override
         public InformasiTerkirimRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.informasi_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
             InformasiTerkirimRVAdapter.ViewHolder viewHolder = new InformasiTerkirimActivity.InformasiTerkirimRVAdapter.ViewHolder(view);
             return viewHolder;
         }
@@ -183,10 +182,10 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                isi = itemView.findViewById(R.id.informasi_item_nama);
+                isi = itemView.findViewById(R.id.list_item_nama);
                 //ganti font family karena informasi terkirim
                 isi.setTextAppearance(getBaseContext(), R.style.sansserif);
-                tanggal = itemView.findViewById(R.id.informasi_item_tanggal);
+                tanggal = itemView.findViewById(R.id.list_item_tanggal);
                 itemLayout = itemView.findViewById(R.id.informasi_item);
             }
         }

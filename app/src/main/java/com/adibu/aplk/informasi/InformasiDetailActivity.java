@@ -1,13 +1,21 @@
 package com.adibu.aplk.informasi;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,9 +31,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InformasiDetailActivity extends AppCompatActivity {
@@ -33,6 +44,8 @@ public class InformasiDetailActivity extends AppCompatActivity {
     Intent mIntent;
     TextView mDibacaTV;
     CardView mDibacaCV;
+    ListView mDibacaLV;
+    ReadByAdapter mReadByAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +54,6 @@ public class InformasiDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mIntent = getIntent();
-        Log.d("INFO_DETAIL", "NO_INFO: " + String.valueOf(mIntent.getStringExtra("no")));
 
         CardView namaCV = findViewById(R.id.detail_informasi_card_nama);
         TextView namaTV = findViewById(R.id.detail_informasi_nama);
@@ -50,8 +62,13 @@ public class InformasiDetailActivity extends AppCompatActivity {
         final ProgressBar fotoPB = findViewById(R.id.detail_informasi_foto_progress);
         TextView tanggalTV = findViewById(R.id.detail_informasi_tanggal);
         final TextView nullfoto = findViewById(R.id.detail_informasi_foto_null);
-        mDibacaTV = findViewById(R.id.detail_informasi_dibaca);
+
         mDibacaCV = findViewById(R.id.detail_informasi_card_dibaca);
+
+        mDibacaLV = findViewById(R.id.detail_informasi_listview_dibaca);
+        mReadByAdapter = new ReadByAdapter(this);
+        mDibacaLV.setAdapter(mReadByAdapter);
+        mDibacaLV.setEmptyView(findViewById(R.id.readby_emptyview));
 
         String nama = mIntent.getStringExtra("nama");
         if(nama==null) {
@@ -83,6 +100,7 @@ public class InformasiDetailActivity extends AppCompatActivity {
                     });
         } else {
             nullfoto.setText(R.string.nullfoto);
+            nullfoto.setTextColor(Color.BLACK);
             fotoPB.setVisibility(View.GONE);
         }
 
@@ -113,7 +131,21 @@ public class InformasiDetailActivity extends AppCompatActivity {
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                mDibacaTV.setText(response.toString());
+                try {
+                    JSONArray status = response.getJSONArray("status");
+                    for(int i=0;i<status.length();i++) {
+                        int no = status.getJSONObject(i).getInt("no_transaksi");
+                        String nama = status.getJSONObject(i).getString("nama");
+                        int stat = status.getJSONObject(i).getInt("status");
+                        String waktu = status.getJSONObject(i).getString("waktu");
+                        ReadBy readBy = new ReadBy(no, nama, stat, waktu);
+                        if(stat==1) {
+                            mReadByAdapter.add(new ReadBy(no, nama, stat, waktu));
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -128,7 +160,7 @@ public class InformasiDetailActivity extends AppCompatActivity {
 
     private void updateInfoTerbaca() {
         final String TAG = "UPDATE_INFO_TERBACA";
-        String URL = ApiUrl.URL_UPDATE_INFO_TERBACA + String.valueOf( mIntent.getStringExtra("no"));
+        String URL = ApiUrl.URL_UPDATE_INFO_TERBACA + mIntent.getStringExtra("no");
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
@@ -152,5 +184,72 @@ public class InformasiDetailActivity extends AppCompatActivity {
         //Jalanin request yang udah dibuat
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest, TAG);
 
+    }
+
+    private class ReadBy {
+        private int noTransaksi;
+        private String nama;
+        private int status;
+        private String waktu;
+
+        public ReadBy(int noTransaksi, String nama, int status, String waktu) {
+            this.noTransaksi = noTransaksi;
+            this.nama = nama;
+            this.status = status;
+            this.waktu = waktu;
+        }
+
+        public int getNoTransaksi() {
+            return noTransaksi;
+        }
+
+        public String getNama() {
+            return nama;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public String getWaktu() {
+            return waktu;
+        }
+
+        @Override
+        public String toString() {
+            return "ReadBy{" +
+                    "noTransaksi=" + noTransaksi +
+                    ", nama='" + nama + '\'' +
+                    ", status=" + status +
+                    ", waktu='" + waktu + '\'' +
+                    '}';
+        }
+    }
+
+    private class ReadByAdapter extends ArrayAdapter<ReadBy> {
+
+        public ReadByAdapter(@NonNull Context context) {
+            super(context, 0);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View listItemView = convertView;
+            if(listItemView == null) {
+                listItemView = LayoutInflater.from(getContext()).inflate(
+                        R.layout.list_item, parent, false);
+            }
+
+            ReadBy currentItem = getItem(position);
+
+            TextView nama = listItemView.findViewById(R.id.list_item_nama);
+            TextView waktu = listItemView.findViewById(R.id.list_item_tanggal);
+            View bar = listItemView.findViewById(R.id.detail_informasi_bar);
+            bar.setVisibility(View.GONE);
+            nama.setText(currentItem.getNama());
+            waktu.setText(currentItem.getWaktu());
+            return listItemView;
+        }
     }
 }

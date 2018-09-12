@@ -162,14 +162,31 @@
                     android:text="@string/dibacaoleh"
                     android:fontFamily="sans-serif-medium"/>
 
-                <TextView
-                    android:id="@+id/detail_informasi_dibaca"
+                <ListView
+                    android:id="@+id/detail_informasi_listview_dibaca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:id="@+id/readby_emptyview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp" />
+                    android:orientation="vertical"
+                    android:layout_margin="10dp">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tidak ada"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
