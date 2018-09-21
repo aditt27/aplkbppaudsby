@@ -15,6 +15,9 @@ public class ApiUrl {
     public static final String URL_UPDATE_MSG = ROOT_API_URL + "updatemsg"; //POST , params: no, isi
     public static final String URL_DELETE_MSG = ROOT_API_URL + "deletemsg&no="; //GET , params: no
 
+	//Laporan
+	//r_surat&nip= , params: nip //Untuk surat diterima
+	
     //User
     public static final String URL_CREATE_USER = ROOT_API_URL + "c_user"; //POST, params: nip, password, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata
     public static final String URL_READ_USERS = ROOT_API_URL + "r_user"; //GET , no params
