@@ -17,6 +17,7 @@ public class ApiUrl {
 
 	//Laporan
 	//r_surat&nip= , params: nip //Untuk surat diterima
+	//c_laporan, params: nop, isi, pic1, pic2, pic3 //nop adalah nomor perintah
 	
     //User
     public static final String URL_CREATE_USER = ROOT_API_URL + "c_user"; //POST, params: nip, password, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata
