@@ -17,7 +17,8 @@ public class ApiUrl {
 
 	//Laporan
 	//r_surat&nip= , params: nip //Untuk surat diterima
-	//c_laporan, params: nop, isi, pic1, pic2, pic3 //nop adalah nomor perintah
+	//c_laporan, params: nop, isi, pic1, pic2, pic3 //nop adalah nomor perintah //Untuk buat laporan
+    //r_laporan&nip= , params: nip //Untuk Laporan Saya
 	public static final String URL_READ_SURAT_DITERIMA = ROOT_API_URL + "r_surat&nip="; //GET , params: nip
 
     //User
