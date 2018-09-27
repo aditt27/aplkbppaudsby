@@ -26,7 +26,7 @@ public class GridAdapter extends ArrayAdapter<GridModel> {
         View gridItemView = convertView;
         if(gridItemView == null) {
             gridItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.grid_item, parent, false);
+                    R.layout.item_grid, parent, false);
         }
 
         GridModel currentItem = getItem(position);

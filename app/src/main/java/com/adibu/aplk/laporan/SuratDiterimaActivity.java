@@ -1,4 +1,4 @@
-package com.adibu.aplk.informasi;
+package com.adibu.aplk.laporan;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,10 +35,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class InformasiTerkirimActivity extends AppCompatActivity implements InternetConnectivityListener{
+public class SuratDiterimaActivity extends AppCompatActivity implements InternetConnectivityListener {
 
-    private ArrayList<InformasiModel> mListInformasi = new ArrayList<>();
-    private InformasiTerkirimRVAdapter mInformasiTerkirimRVAdapter;
+    private ArrayList<SuratModel> mListSurat = new ArrayList<>();
+    private SuratDiterimaRVAdapter mSuratDiterimaRVAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
     private InternetAvailabilityChecker mInternetAvailabilityChecker;
     private Boolean internetConnected = false;
@@ -46,31 +48,25 @@ public class InformasiTerkirimActivity extends AppCompatActivity implements Inte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_swiperecycleview);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
         mInternetAvailabilityChecker.addInternetConnectivityListener(this);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = findViewById(R.id.list_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        mInformasiTerkirimRVAdapter = new InformasiTerkirimRVAdapter(mListInformasi);
-        recyclerView.setAdapter(mInformasiTerkirimRVAdapter);
-
-        //Reverse Item (Newest one in the top)
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setReverseLayout(true);
-        llm.setStackFromEnd(true);
-        recyclerView.setLayoutManager(llm);
+        mSuratDiterimaRVAdapter = new SuratDiterimaRVAdapter(mListSurat);
+        recyclerView.setAdapter(mSuratDiterimaRVAdapter);
 
         mSwipeRefresh = findViewById(R.id.list_swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if(internetConnected) {
-                    getListInformasiTerkirim();
+                    getListSuratDiterima();
                 } else {
-                    Toast.makeText(InformasiTerkirimActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuratDiterimaActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
                     mSwipeRefresh.setRefreshing(false);
                 }
             }
@@ -79,7 +75,7 @@ public class InformasiTerkirimActivity extends AppCompatActivity implements Inte
         //RefreshAnimation
         mSwipeRefresh.setRefreshing(true);
         //Ambil Data informasi dari DB
-        getListInformasiTerkirim();
+        getListSuratDiterima();
     }
 
     @Override
@@ -103,10 +99,11 @@ public class InformasiTerkirimActivity extends AppCompatActivity implements Inte
         super.onDestroy();
     }
 
-    private void getListInformasiTerkirim() {
+    private void getListSuratDiterima() {
+
         SessionManager sm = new SessionManager(getApplicationContext());
-        String TAG = "READ_INFOS_TERKIRIM";
-        String URL = ApiUrl.URL_READ_INFOS_TERKIRIM + sm.getSessionNIP();
+        final String TAG = "READ_SURAT_DITERIMA";
+        String URL = ApiUrl.URL_READ_SURAT_DITERIMA + sm.getSessionNIP();
 
         if(internetConnected) {
             AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, false);
@@ -116,27 +113,29 @@ public class InformasiTerkirimActivity extends AppCompatActivity implements Inte
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    Log.e(TAG, response.toString());
                     //hapus isi informasi (untuk refresh)
-                    mListInformasi.clear();
+                    mListSurat.clear();
 
                     //Ambil array dari json yg judul arraynya "info"
-                    JSONArray jsonListInformasi = response.getJSONArray("info");
+                    JSONArray jsonListSurat = response.getJSONArray("surat");
 
-                    //masukin yg ada di jsonarray ke arraylist informasi
-                    for(int i=0;i<jsonListInformasi.length();i++) {
-                        //status informasi -1 karena informasi terkirim(tidak butuh status)
-                        mListInformasi.add(new InformasiModel(
-                                jsonListInformasi.getJSONObject(i).getInt("no_info"),
-                                "",
-                                jsonListInformasi.getJSONObject(i).getString("waktu"),
-                                jsonListInformasi.getJSONObject(i).getString("isi"),
-                                jsonListInformasi.getJSONObject(i).getString("gambar"),
-                                -1
+                    //masukin yg ada di jsonarray ke arraylist surat
+                    for(int i=0;i<jsonListSurat.length();i++) {
+                        mListSurat.add(new SuratModel(
+                                jsonListSurat.getJSONObject(i).getInt("noPerintah"),
+                                jsonListSurat.getJSONObject(i).getString("noSurat"),
+                                jsonListSurat.getJSONObject(i).getString("waktu"),
+                                jsonListSurat.getJSONObject(i).getInt("status"),
+                                jsonListSurat.getJSONObject(i).getString("perihal"),
+                                jsonListSurat.getJSONObject(i).getString("tempat"),
+                                jsonListSurat.getJSONObject(i).getString("durasi"),
+                                jsonListSurat.getJSONObject(i).getString("kategori")
                         ));
                     }
 
                     //update adapter setelah masukin ke arraylist informasi
-                    mInformasiTerkirimRVAdapter.notifyDataSetChanged();
+                    mSuratDiterimaRVAdapter.notifyDataSetChanged();
 
                     //selesai swipe refresh
                     mSwipeRefresh.setRefreshing(false);
@@ -156,35 +155,40 @@ public class InformasiTerkirimActivity extends AppCompatActivity implements Inte
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
 
-    private class InformasiTerkirimRVAdapter extends RecyclerView.Adapter<InformasiTerkirimRVAdapter.ViewHolder>{
+    private class SuratDiterimaRVAdapter extends RecyclerView.Adapter<SuratDiterimaRVAdapter.ViewHolder> {
 
-        private ArrayList<InformasiModel> listInformasi;
+        private ArrayList<SuratModel> listSurat;
 
-        private InformasiTerkirimRVAdapter(ArrayList<InformasiModel> mListInformasi) {
-            this.listInformasi = mListInformasi;
+        public SuratDiterimaRVAdapter(ArrayList<SuratModel> listSurat) {
+            this.listSurat = listSurat;
         }
 
         @NonNull
         @Override
-        public InformasiTerkirimRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_informasi, parent, false);
-            InformasiTerkirimRVAdapter.ViewHolder viewHolder = new InformasiTerkirimActivity.InformasiTerkirimRVAdapter.ViewHolder(view);
+        public SuratDiterimaRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_laporan, parent, false);
+            SuratDiterimaRVAdapter.ViewHolder viewHolder = new SuratDiterimaRVAdapter.ViewHolder(view);
             return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final InformasiTerkirimRVAdapter.ViewHolder holder, int position) {
-            holder.isi.setText("\""+listInformasi.get(position).getIsi()+"\"");
-            holder.tanggal.setText(listInformasi.get(position).getWaktu());
+        public void onBindViewHolder(@NonNull final SuratDiterimaRVAdapter.ViewHolder holder, int position) {
+            holder.judul.setText(listSurat.get(position).getNoSurat());
+            holder.kiri.setText(listSurat.get(position).getWaktu());
+            //holder.kanan.setText(String.valueOf(listSurat.get(position).getStatus()));
+            holder.kanan.setText(" ");
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(InformasiTerkirimActivity.this, InformasiDetailActivity.class);
-                    i.putExtra("no", String.valueOf(listInformasi.get(holder.getAdapterPosition()).getNo()));
-                    i.putExtra("waktu", listInformasi.get(holder.getAdapterPosition()).getWaktu());
-                    i.putExtra("isi", listInformasi.get(holder.getAdapterPosition()).getIsi());
-                    i.putExtra("gambar", listInformasi.get(holder.getAdapterPosition()).getGambar());
-                    i.putExtra("dari", "terkirim");
+                    Intent i = new Intent(SuratDiterimaActivity.this, DetailSuratActivity.class);
+                    i.putExtra("noPerintah", listSurat.get(holder.getAdapterPosition()).getNoPerintah());
+                    i.putExtra("noSurat", listSurat.get(holder.getAdapterPosition()).getNoSurat());
+                    i.putExtra("waktu", listSurat.get(holder.getAdapterPosition()).getWaktu());
+                    i.putExtra("status", listSurat.get(holder.getAdapterPosition()).getStatus());
+                    i.putExtra("perihal", listSurat.get(holder.getAdapterPosition()).getPerihal());
+                    i.putExtra("tempat", listSurat.get(holder.getAdapterPosition()).getTempat());
+                    i.putExtra("durasi", listSurat.get(holder.getAdapterPosition()).getDurasi());
+                    i.putExtra("kategori", listSurat.get(holder.getAdapterPosition()).getKategori());
                     startActivity(i);
                 }
             });
@@ -192,23 +196,23 @@ public class InformasiTerkirimActivity extends AppCompatActivity implements Inte
 
         @Override
         public int getItemCount() {
-            return listInformasi.size();
+            return listSurat.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            TextView isi;
-            TextView tanggal;
+            TextView judul;
+            TextView kiri;
+            TextView kanan;
 
-            RelativeLayout itemLayout;
+            LinearLayout itemLayout;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                isi = itemView.findViewById(R.id.informasi_item_nama);
-                //ganti font family karena informasi terkirim
-                isi.setTextAppearance(getBaseContext(), R.style.sansserif);
-                tanggal = itemView.findViewById(R.id.informasi_item_tanggal);
-                itemLayout = itemView.findViewById(R.id.informasi_item);
+                judul = itemView.findViewById(R.id.laporan_item_judul);
+                kiri = itemView.findViewById(R.id.laporan_item_kiri);
+                kanan = itemView.findViewById(R.id.laporan_item_kanan);
+                itemLayout = itemView.findViewById(R.id.laporan_item_layout);
             }
         }
     }

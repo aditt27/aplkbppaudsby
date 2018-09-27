@@ -12,6 +12,22 @@
 
     <string name="infoterkirim">Info Terkirim</string>
     <string name="infoditerima">Info Diterima</string>
+    <string name="infokirim">Kirim Info</string>
+
+    <string name="suratditerima">Surat Diterima</string>
+    <string name="laporansaya">Laporan Saya</string>
+    <string name="semualaporan">Semua Laporan</string>
+
+    <string name="nosurat">Nomor Surat</string>
+    <string name="tempat">Tempat</string>
+    <string name="waktu">Waktu</string>
+    <string name="perihal">Perihal</string>
+    <string name="durasi">Durasi</string>
+    <string name="kategori">Kategori</string>
+    <string name="buatlaporan">Buat Laporan</string>
+
+    <string name="nointernet">Tidak dapat terhubung ke jaringan. Silahkan coba lagi</string>
+    <string name="notujuaninfo">Tidak ada tujuan info yang dipilih</string>
 
     <string name="kirim">Kirim</string>
     <string name="harus_diisi">Harus diisi</string>

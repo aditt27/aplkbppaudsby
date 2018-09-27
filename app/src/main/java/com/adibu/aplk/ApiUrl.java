@@ -16,7 +16,7 @@ public class ApiUrl {
     public static final String URL_DELETE_MSG = ROOT_API_URL + "deletemsg&no="; //GET , params: no
 
 	//Laporan
-	//r_surat&nip= , params: nip //Untuk surat diterima
+	public static final String URL_READ_SURAT_DITERIMA = ROOT_API_URL + "r_surat&nip="; //GET , params: nip
 	
     //User
     public static final String URL_CREATE_USER = ROOT_API_URL + "c_user"; //POST, params: nip, password, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata

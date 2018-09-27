@@ -16,6 +16,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
+import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,16 +26,20 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements InternetConnectivityListener{
 
     EditText mInputNip;
     EditText mInputPassword;
     Button mButtonSignIn;
-
+    InternetAvailabilityChecker mInternetAvailabilityChecker;
+    Boolean internetConnected = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
+        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         mInputNip = findViewById(R.id.input_nip);
         mInputPassword = findViewById(R.id.input_password);
@@ -51,9 +57,14 @@ public class LoginActivity extends AppCompatActivity {
                 if(password.isEmpty()) {
                     mInputPassword.setError("Wajib diisi");
                 }
-                if(!nip.isEmpty() && !password.isEmpty()) {
-                    verifySignIn(nip, password);
+
+                if(!nip.isEmpty() && !password.isEmpty() && internetConnected) {
+                        verifySignIn(nip, password);
                 }
+                else if(!nip.isEmpty() && !password.isEmpty()){
+                    Toast.makeText(LoginActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -63,23 +74,34 @@ public class LoginActivity extends AppCompatActivity {
         finishAffinity();
     }
 
+    @Override
+    public void onInternetConnectivityChanged(boolean isConnected) {
+        internetConnected = isConnected;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
+        super.onDestroy();
+    }
+
     private void verifySignIn(final String nip, final String password) {
 
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Login...");
         pDialog.show();
 
-        final String tag_sign_in = "tag_sign_in";
-        String url = ApiUrl.URL_READ_USER+nip;
+        final String TAG = "SIGN_IN";
+        String URL = ApiUrl.URL_READ_USER+nip;
 
-        final JsonObjectRequest jsonGetUserData = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     JSONArray jsonUser = response.getJSONArray("users");
                     if(jsonUser.length()>0) {
                         String pass = jsonUser.getJSONObject(0).getString("password");
-                        if(password.equals(pass)) {
+                        if(stringToSHA256(password).toLowerCase().equals(pass.toLowerCase())) {
                             String nama = jsonUser.getJSONObject(0).getString("nama");
 
                             Boolean karyawan = jsonUser.getJSONObject(0).getInt("karyawan") == 1;
@@ -134,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //Jalanin request yang udah dibuat
-        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonGetUserData, tag_sign_in);
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
 
     private String stringToSHA256 (String string) {
@@ -146,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
             byte byteData[] = md.digest();
 
             //convert the byte to hex format method 1
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < byteData.length; i++) {
                 sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
             }
@@ -156,4 +178,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         return null;
     }
+
+
 }

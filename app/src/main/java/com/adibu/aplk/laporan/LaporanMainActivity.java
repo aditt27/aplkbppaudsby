@@ -1,6 +1,7 @@
-package com.adibu.aplk.informasi;
+package com.adibu.aplk.laporan;
 
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,12 +13,12 @@ import com.adibu.aplk.R;
 import com.adibu.aplk.grid.GridAdapter;
 import com.adibu.aplk.grid.GridModel;
 
-public class InformasiMain extends AppCompatActivity {
+public class LaporanMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grid);
+        setContentView(R.layout.layout_gridview);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -25,20 +26,25 @@ public class InformasiMain extends AppCompatActivity {
         GridAdapter gridAdapter = new GridAdapter(this, 0);
         gridView.setAdapter(gridAdapter);
 
-        gridAdapter.add(new GridModel(android.R.drawable.ic_popup_reminder, R.string.infoditerima));
-        gridAdapter.add(new GridModel(android.R.drawable.ic_dialog_email, R.string.infoterkirim));
+        gridAdapter.add(new GridModel(android.R.drawable.ic_dialog_info, R.string.suratditerima));
+        gridAdapter.add(new GridModel(android.R.drawable.ic_menu_report_image, R.string.laporansaya));
+        gridAdapter.add(new GridModel(android.R.drawable.ic_menu_day, R.string.semualaporan));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch ((int)id) {
                     case 0:
-                        Intent i = new Intent(InformasiMain.this, InformasiDiterimaActivity.class);
+                        Intent i = new Intent(LaporanMainActivity.this, SuratDiterimaActivity.class);
                         startActivity(i);
                         break;
                     case 1:
-                        Intent j = new Intent(InformasiMain.this, InformasiTerkirimActivity.class);
+                        Intent j = new Intent(LaporanMainActivity.this, LaporanSayaActivity.class);
                         startActivity(j);
+                        break;
+                    case 2:
+                        Intent k = new Intent(LaporanMainActivity.this, SemuaLaporanActivity.class);
+                        startActivity(k);
                         break;
                 }
             }
@@ -49,7 +55,7 @@ public class InformasiMain extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

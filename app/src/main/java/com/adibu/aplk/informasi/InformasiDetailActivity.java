@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import com.adibu.aplk.ApiUrl;
 import com.adibu.aplk.AppSingleton;
 import com.adibu.aplk.R;
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,28 +30,34 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
+import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class InformasiDetailActivity extends AppCompatActivity {
+public class InformasiDetailActivity extends AppCompatActivity implements InternetConnectivityListener {
 
     Intent mIntent;
-    TextView mDibacaTV;
     CardView mDibacaCV;
     ListView mDibacaLV;
     ReadByAdapter mReadByAdapter;
+    InternetAvailabilityChecker mInternetAvailabilityChecker;
+    Boolean internetConnected = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informasi_detail);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
+        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         mIntent = getIntent();
 
@@ -64,8 +70,8 @@ public class InformasiDetailActivity extends AppCompatActivity {
         final TextView nullfoto = findViewById(R.id.detail_informasi_foto_null);
 
         mDibacaCV = findViewById(R.id.detail_informasi_card_dibaca);
-
         mDibacaLV = findViewById(R.id.detail_informasi_listview_dibaca);
+
         mReadByAdapter = new ReadByAdapter(this);
         mDibacaLV.setAdapter(mReadByAdapter);
         mDibacaLV.setEmptyView(findViewById(R.id.readby_emptyview));
@@ -124,6 +130,17 @@ public class InformasiDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onInternetConnectivityChanged(boolean isConnected) {
+        internetConnected = isConnected;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
+        super.onDestroy();
+    }
+
     private void readInfoTerbaca() {
         String TAG = "READ_INFO_TERBACA";
         String URL = ApiUrl.URL_READ_INFO_TERBACA + mIntent.getStringExtra("no");
@@ -162,6 +179,10 @@ public class InformasiDetailActivity extends AppCompatActivity {
         final String TAG = "UPDATE_INFO_TERBACA";
         String URL = ApiUrl.URL_UPDATE_INFO_TERBACA + mIntent.getStringExtra("no");
 
+        if(internetConnected) {
+            AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, false);
+        }
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -185,6 +206,8 @@ public class InformasiDetailActivity extends AppCompatActivity {
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest, TAG);
 
     }
+
+
 
     private class ReadBy {
         private int noTransaksi;
@@ -215,15 +238,6 @@ public class InformasiDetailActivity extends AppCompatActivity {
             return waktu;
         }
 
-        @Override
-        public String toString() {
-            return "ReadBy{" +
-                    "noTransaksi=" + noTransaksi +
-                    ", nama='" + nama + '\'' +
-                    ", status=" + status +
-                    ", waktu='" + waktu + '\'' +
-                    '}';
-        }
     }
 
     private class ReadByAdapter extends ArrayAdapter<ReadBy> {
@@ -238,13 +252,13 @@ public class InformasiDetailActivity extends AppCompatActivity {
             View listItemView = convertView;
             if(listItemView == null) {
                 listItemView = LayoutInflater.from(getContext()).inflate(
-                        R.layout.list_item, parent, false);
+                        R.layout.item_informasi, parent, false);
             }
 
             ReadBy currentItem = getItem(position);
 
-            TextView nama = listItemView.findViewById(R.id.list_item_nama);
-            TextView waktu = listItemView.findViewById(R.id.list_item_tanggal);
+            TextView nama = listItemView.findViewById(R.id.informasi_item_nama);
+            TextView waktu = listItemView.findViewById(R.id.informasi_item_tanggal);
             View bar = listItemView.findViewById(R.id.detail_informasi_bar);
             bar.setVisibility(View.GONE);
             nama.setText(currentItem.getNama());

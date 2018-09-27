@@ -3,9 +3,11 @@
     package="com.adibu.aplk">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,42 +24,60 @@
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".informasi.InformasiDiterimaActivity"
-            android:label="@string/infoditerima" />
+            android:label="@string/infoditerima"
+            android:parentActivityName=".informasi.InformasiMainActivity" />
         <activity
-            android:name=".LaporanActivity"
-            android:label="@string/laporan" />
+            android:name=".laporan.LaporanMainActivity"
+            android:label="@string/laporan"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".informasi.InformasiTambahActivity"
-            android:label="@string/informasi_baru" />
+            android:label="@string/informasi_baru"
+            android:parentActivityName=".informasi.InformasiMainActivity" />
         <activity
             android:name=".AccountActivity"
-            android:label="@string/Akun" />
+            android:label="@string/Akun"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".informasi.InformasiDetailActivity"
             android:label="@string/detailpesan" />
         <activity
-            android:name=".informasi.InformasiMain"
-            android:label="@string/informasi" />
+            android:name=".informasi.InformasiMainActivity"
+            android:label="@string/informasi"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".informasi.InformasiTerkirimActivity"
-            android:label="@string/infoterkirim" />
+            android:label="@string/infoterkirim"
+            android:parentActivityName=".informasi.InformasiMainActivity" />
+        <activity
+            android:name=".laporan.SuratDiterimaActivity"
+            android:label="@string/suratditerima"
+            android:parentActivityName=".laporan.LaporanMainActivity" />
+        <activity
+            android:name=".laporan.LaporanSayaActivity"
+            android:label="@string/laporansaya"
+            android:parentActivityName=".laporan.LaporanMainActivity" />
+        <activity
+            android:name=".laporan.SemuaLaporanActivity"
+            android:label="@string/semualaporan"
+            android:parentActivityName=".laporan.LaporanMainActivity" />
 
         <service android:name=".firebase.MyFirebaseInstanceIdService">
-
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-
         </service>
-
-        <service
-            android:name=".firebase.MyFirebaseMessagingService">
-
+        <service android:name=".firebase.MyFirebaseMessagingService">
             <intent-filter>
-            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
         </service>
+
+        <activity
+            android:name=".laporan.DetailSuratActivity"
+            android:parentActivityName=".laporan.SuratDiterimaActivity"/>
+        <activity
+            android:name=".laporan.BuatLaporanActivity"></activity>
     </application>
 
 </manifest>

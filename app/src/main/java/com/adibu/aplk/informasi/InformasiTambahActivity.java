@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.adibu.aplk.ApiUrl;
@@ -30,13 +32,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
+import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InformasiTambahActivity extends AppCompatActivity {
+public class InformasiTambahActivity extends AppCompatActivity implements InternetConnectivityListener {
 
     private static final int PICK_IMAGE = 1;
 
@@ -45,11 +49,16 @@ public class InformasiTambahActivity extends AppCompatActivity {
     private Button mButtonGambar;
     private Bitmap mBitmapGambar;
     private CheckBox[] mKirimKeCheckBoxes;
+    InternetAvailabilityChecker mInternetAvailabilityChecker;
+    Boolean internetConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informasi_tambah);
+
+        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
+        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -91,23 +100,43 @@ public class InformasiTambahActivity extends AppCompatActivity {
             case R.id.menu_tambah_informasi_kirim:
                 String info = mInputInfo.getText().toString().trim();
                 if(!info.isEmpty()){
-                    if(mBitmapGambar==null){
-                        addInfo(info);
-                        finish();
+                    if(isCheckBoxesChecked()) {
+                        if(internetConnected) {
+                            if(mBitmapGambar==null){
+                                addInfo(info);
+                                finish();
+                            } else {
+                                addInfo(info, mBitmapGambar);
+                                finish();
+                            }
+                        } else {
+                            Toast.makeText(InformasiTambahActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        addInfo(info, mBitmapGambar);
-                        finish();
+                        Toast.makeText(InformasiTambahActivity.this, getString(R.string.notujuaninfo), Toast.LENGTH_SHORT).show();
                     }
                 }else {
                     mInputInfo.setError(getString(R.string.harus_diisi));
                 }
                 return true;
             case android.R.id.home:
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onInternetConnectivityChanged(boolean isConnected) {
+        internetConnected = isConnected;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
+        super.onDestroy();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -211,6 +240,19 @@ public class InformasiTambahActivity extends AppCompatActivity {
         //Jalanin request yang udah dibuat
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest, TAG);
 
+    }
+
+    private Boolean isCheckBoxesChecked() {
+        if(mKirimKeCheckBoxes[0].isChecked() ||
+                mKirimKeCheckBoxes[1].isChecked() ||
+                mKirimKeCheckBoxes[2].isChecked() ||
+                mKirimKeCheckBoxes[3].isChecked() ||
+                mKirimKeCheckBoxes[4].isChecked() ||
+                mKirimKeCheckBoxes[5].isChecked() ||
+                mKirimKeCheckBoxes[6].isChecked()) {
+            return true;
+        }
+        return false;
     }
 
     /*

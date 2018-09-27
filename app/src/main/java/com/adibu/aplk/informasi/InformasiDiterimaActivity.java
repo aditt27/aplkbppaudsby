@@ -2,7 +2,7 @@ package com.adibu.aplk.informasi;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adibu.aplk.ApiUrl;
 import com.adibu.aplk.AppSingleton;
@@ -23,6 +24,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
+import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,20 +33,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class InformasiDiterimaActivity extends AppCompatActivity {
+public class InformasiDiterimaActivity extends AppCompatActivity implements InternetConnectivityListener {
 
     private ArrayList<InformasiModel> mListInformasi = new ArrayList<>();
     private InformasiDiterimaRVAdapter mInformasiDiterimaRVAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
+    private InternetAvailabilityChecker mInternetAvailabilityChecker;
+    private Boolean internetConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_informasi_list);
+        setContentView(R.layout.layout_swiperecycleview);
+
+        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
+        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RecyclerView recyclerView = findViewById(R.id.informasi_recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.list_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         mInformasiDiterimaRVAdapter = new InformasiDiterimaRVAdapter(mListInformasi);
@@ -55,19 +63,16 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(InformasiDiterimaActivity.this, InformasiTambahActivity.class));
-            }
-        });
-
-        mSwipeRefresh = findViewById(R.id.informasi_swipe_refresh);
+        mSwipeRefresh = findViewById(R.id.list_swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getListInformasiDiterima();
+                if(internetConnected) {
+                    getListInformasiDiterima();
+                } else {
+                    Toast.makeText(InformasiDiterimaActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+                    mSwipeRefresh.setRefreshing(false);
+                }
             }
         });
 
@@ -81,16 +86,32 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onInternetConnectivityChanged(boolean isConnected) {
+        internetConnected = isConnected;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
+        super.onDestroy();
+    }
+
     private void getListInformasiDiterima() {
+
         SessionManager sm = new SessionManager(getApplicationContext());
         String TAG = "READ_INFOS_DITERIMA";
         String URL = ApiUrl.URL_READ_INFOS_DITERIMA + sm.getSessionNIP();
+
+        if(internetConnected) {
+            AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, false);
+        }
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
@@ -104,13 +125,14 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
 
                     //masukin yg ada di jsonarray ke arraylist informasi
                     for(int i=0;i<jsonListInformasi.length();i++) {
-                        String nama = jsonListInformasi.getJSONObject(i).getString("nama");
-                        String waktu = jsonListInformasi.getJSONObject(i).getString("waktu");
-                        String isi = jsonListInformasi.getJSONObject(i).getString("isi");
-                        String gambar = jsonListInformasi.getJSONObject(i).getString("gambar");
-                        int status = jsonListInformasi.getJSONObject(i).getInt("status");
-                        int no = jsonListInformasi.getJSONObject(i).getInt("no");
-                        mListInformasi.add(new InformasiModel(no, nama, waktu, isi, gambar, status));
+                        mListInformasi.add(new InformasiModel(
+                                jsonListInformasi.getJSONObject(i).getInt("no"),
+                                jsonListInformasi.getJSONObject(i).getString("nama"),
+                                jsonListInformasi.getJSONObject(i).getString("waktu"),
+                                jsonListInformasi.getJSONObject(i).getString("isi"),
+                                jsonListInformasi.getJSONObject(i).getString("gambar"),
+                                jsonListInformasi.getJSONObject(i).getInt("status")
+                        ));
                     }
 
                     //update adapter setelah masukin ke arraylist informasi
@@ -134,18 +156,18 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
 
-    public class InformasiDiterimaRVAdapter extends RecyclerView.Adapter<InformasiDiterimaRVAdapter.ViewHolder>{
+    private class InformasiDiterimaRVAdapter extends RecyclerView.Adapter<InformasiDiterimaRVAdapter.ViewHolder>{
 
         private ArrayList<InformasiModel> listInformasi;
 
-        public InformasiDiterimaRVAdapter(ArrayList<InformasiModel> mListInformasi) {
+        private InformasiDiterimaRVAdapter(ArrayList<InformasiModel> mListInformasi) {
             this.listInformasi = mListInformasi;
         }
 
         @NonNull
         @Override
         public InformasiDiterimaRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_informasi, parent, false);
             InformasiDiterimaRVAdapter.ViewHolder viewHolder = new InformasiDiterimaRVAdapter.ViewHolder(view);
             return viewHolder;
         }
@@ -157,7 +179,9 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
                 isiNama = isiNama + " " + "(Baru)";
             }
             holder.nama.setText(isiNama);
-            holder.tanggal.setText(listInformasi.get(position).getWaktu());
+            String tanggalInfo = listInformasi.get(position).getWaktu();
+
+            holder.tanggal.setText(tanggalInfo);
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -190,8 +214,8 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                nama = itemView.findViewById(R.id.list_item_nama);
-                tanggal = itemView.findViewById(R.id.list_item_tanggal);
+                nama = itemView.findViewById(R.id.informasi_item_nama);
+                tanggal = itemView.findViewById(R.id.informasi_item_tanggal);
                 itemLayout = itemView.findViewById(R.id.informasi_item);
             }
         }
