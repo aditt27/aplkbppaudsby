@@ -45,4 +45,6 @@ public class InformasiModel {
     public int getStatus() {
         return status;
     }
+
+
 }

@@ -17,6 +17,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -58,7 +59,7 @@
             android:label="@string/laporansaya"
             android:parentActivityName=".laporan.LaporanMainActivity" />
         <activity
-            android:name=".laporan.SemuaLaporanActivity"
+            android:name=".laporan.LaporanSemuaActivity"
             android:label="@string/semualaporan"
             android:parentActivityName=".laporan.LaporanMainActivity" />
 
@@ -74,10 +75,13 @@
         </service>
 
         <activity
-            android:name=".laporan.DetailSuratActivity"
-            android:parentActivityName=".laporan.SuratDiterimaActivity"/>
+            android:name=".laporan.SuratDetailActivity"
+            android:label="@string/detailsurat"
+            android:parentActivityName=".laporan.SuratDiterimaActivity" />
         <activity
-            android:name=".laporan.BuatLaporanActivity"></activity>
+            android:name=".laporan.LaporanBuatActivity"
+            android:label="@string/buatlaporan" />
+        <activity android:name=".laporan.LaporanDetailActivity"></activity>
     </application>
 
 </manifest>

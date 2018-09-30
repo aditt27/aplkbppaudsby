@@ -26,9 +26,9 @@ public class LaporanMainActivity extends AppCompatActivity {
         GridAdapter gridAdapter = new GridAdapter(this, 0);
         gridView.setAdapter(gridAdapter);
 
-        gridAdapter.add(new GridModel(android.R.drawable.ic_dialog_info, R.string.suratditerima));
-        gridAdapter.add(new GridModel(android.R.drawable.ic_menu_report_image, R.string.laporansaya));
-        gridAdapter.add(new GridModel(android.R.drawable.ic_menu_day, R.string.semualaporan));
+        gridAdapter.add(new GridModel(R.drawable.ic_receive_mail, R.string.suratditerima));
+        gridAdapter.add(new GridModel(R.drawable.ic_my_report, R.string.laporansaya));
+        gridAdapter.add(new GridModel(R.drawable.ic_all_reports, R.string.semualaporan));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -43,7 +43,7 @@ public class LaporanMainActivity extends AppCompatActivity {
                         startActivity(j);
                         break;
                     case 2:
-                        Intent k = new Intent(LaporanMainActivity.this, SemuaLaporanActivity.class);
+                        Intent k = new Intent(LaporanMainActivity.this, LaporanSemuaActivity.class);
                         startActivity(k);
                         break;
                 }

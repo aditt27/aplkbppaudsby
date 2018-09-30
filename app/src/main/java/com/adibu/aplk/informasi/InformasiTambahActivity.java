@@ -25,7 +25,6 @@ import com.adibu.aplk.AppSingleton;
 import com.adibu.aplk.R;
 import com.adibu.aplk.SessionManager;
 import com.adibu.aplk.VolleyMultiPartRequest;
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 
@@ -90,14 +89,14 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_tambah_informasi, menu);
+        inflater.inflate(R.menu.menu_kirim, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_tambah_informasi_kirim:
+            case R.id.menu_kirim:
                 String info = mInputInfo.getText().toString().trim();
                 if(!info.isEmpty()){
                     if(isCheckBoxesChecked()) {

@@ -16,28 +16,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:text="Judul" />
+            android:text="" />
 
         <TextView
             android:id="@+id/laporan_item_kiri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/laporan_item_judul"
-            android:text="Kiri"/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/laporan_item_kanan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/laporan_item_judul"
-            android:text="Kanan"
+            android:text=""
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/item"
         android:background="@android:color/black"/>
 
 </LinearLayout>

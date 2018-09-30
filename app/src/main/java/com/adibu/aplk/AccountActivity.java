@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -19,15 +20,16 @@ public class AccountActivity extends AppCompatActivity {
         TextView namaTV = findViewById(R.id.akun_nama);
         TextView nipTV = findViewById(R.id.akun_nip);
         TextView roleTV = findViewById(R.id.akun_role);
-        Button testNotif = findViewById(R.id.test_notifikasi);
+        //Button testNotif = findViewById(R.id.test_notifikasi);
+        LinearLayout gantiPassword = findViewById(R.id.akun_ganti_password);
 
-        testNotif.setOnClickListener(new View.OnClickListener() {
+        /*testNotif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MyNotificationManager notifMgr = new MyNotificationManager(getApplicationContext());
                 notifMgr.showInformasiNotification("title", "message");
             }
-        });
+        });*/
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -52,6 +54,13 @@ public class AccountActivity extends AppCompatActivity {
 
         roleTV.setText(role);
 
+        gantiPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
     }
 
@@ -63,5 +72,9 @@ public class AccountActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void gantiPass() {
+
     }
 }
