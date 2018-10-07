@@ -26,9 +26,9 @@ public class InformasiMainActivity extends AppCompatActivity {
         GridAdapter gridAdapter = new GridAdapter(this, 0);
         gridView.setAdapter(gridAdapter);
 
-        gridAdapter.add(new GridModel(android.R.drawable.ic_popup_reminder, R.string.infoditerima));
-        gridAdapter.add(new GridModel(android.R.drawable.ic_dialog_email, R.string.infoterkirim));
-        gridAdapter.add(new GridModel(android.R.drawable.ic_menu_add, R.string.infokirim ));
+        gridAdapter.add(new GridModel(R.drawable.ic_info_received, R.string.infoditerima));
+        gridAdapter.add(new GridModel(R.drawable.ic_info_sent, R.string.infoterkirim));
+        gridAdapter.add(new GridModel(R.drawable.ic_info_add, R.string.infokirim ));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

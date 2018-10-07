@@ -8,13 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +35,7 @@ import java.util.ArrayList;
 
 public class SuratDiterimaActivity extends AppCompatActivity implements InternetConnectivityListener {
 
-    private ArrayList<SuratModel> mListSurat = new ArrayList<>();
+    private ArrayList<LaporanSuratModel> mListSurat = new ArrayList<>();
     private SuratDiterimaRVAdapter mSuratDiterimaRVAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
     private InternetAvailabilityChecker mInternetAvailabilityChecker;
@@ -74,7 +72,7 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
 
         //RefreshAnimation
         mSwipeRefresh.setRefreshing(true);
-        //Ambil Data informasi dari DB
+        //Ambil data dari DB
         getListSuratDiterima();
     }
 
@@ -113,7 +111,6 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Log.e(TAG, response.toString());
                     //hapus isi informasi (untuk refresh)
                     mListSurat.clear();
 
@@ -122,7 +119,7 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
 
                     //masukin yg ada di jsonarray ke arraylist surat
                     for(int i=0;i<jsonListSurat.length();i++) {
-                        mListSurat.add(new SuratModel(
+                        mListSurat.add(new LaporanSuratModel(
                                 jsonListSurat.getJSONObject(i).getInt("noPerintah"),
                                 jsonListSurat.getJSONObject(i).getString("noSurat"),
                                 jsonListSurat.getJSONObject(i).getString("waktu"),
@@ -157,9 +154,9 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
 
     private class SuratDiterimaRVAdapter extends RecyclerView.Adapter<SuratDiterimaRVAdapter.ViewHolder> {
 
-        private ArrayList<SuratModel> listSurat;
+        private ArrayList<LaporanSuratModel> listSurat;
 
-        public SuratDiterimaRVAdapter(ArrayList<SuratModel> listSurat) {
+        public SuratDiterimaRVAdapter(ArrayList<LaporanSuratModel> listSurat) {
             this.listSurat = listSurat;
         }
 
@@ -180,7 +177,7 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(SuratDiterimaActivity.this, DetailSuratActivity.class);
+                    Intent i = new Intent(SuratDiterimaActivity.this, SuratDetailActivity.class);
                     i.putExtra("noPerintah", listSurat.get(holder.getAdapterPosition()).getNoPerintah());
                     i.putExtra("noSurat", listSurat.get(holder.getAdapterPosition()).getNoSurat());
                     i.putExtra("waktu", listSurat.get(holder.getAdapterPosition()).getWaktu());

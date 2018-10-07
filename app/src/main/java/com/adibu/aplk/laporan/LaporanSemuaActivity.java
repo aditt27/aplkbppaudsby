@@ -7,12 +7,12 @@ import android.view.MenuItem;
 
 import com.adibu.aplk.R;
 
-public class BuatLaporanActivity extends AppCompatActivity {
+public class LaporanSemuaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_buat_laporan);
+        setContentView(R.layout.layout_swiperecycleview);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -21,7 +21,7 @@ public class BuatLaporanActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

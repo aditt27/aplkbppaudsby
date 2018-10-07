@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".laporan.DetailSuratActivity">
+    tools:context=".laporan.SuratDetailActivity">
 
     <ScrollView
         android:id="@+id/sv"
@@ -200,15 +200,29 @@
 
     </ScrollView>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/detail_surat_buat_laporan"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/buatlaporan"
+        android:layout_height="56dp"
         android:gravity="center"
-        android:padding="15dp"
-        android:textSize="16sp"
-        android:background="@color/green"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:elevation="4dp">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_add_report"
+            android:layout_margin="6dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buatlaporan"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

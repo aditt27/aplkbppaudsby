@@ -31,7 +31,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="@android:color/black"/>
 
     <LinearLayout
@@ -58,7 +58,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="@android:color/black"/>
 
     <LinearLayout
@@ -85,27 +85,28 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="@android:color/black"/>
 
     <LinearLayout
+        android:id="@+id/akun_ganti_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true"
-        android:background="#eeeeee">
+        android:focusable="true">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/star_big_on"/>
+            android:src="@drawable/ic_lock_black"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:layout_marginStart="8dp"
             android:text="@string/gantipassword"
             android:textSize="16sp"
             android:fontFamily="sans-serif-medium"/>
@@ -114,14 +115,13 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="@android:color/black"/>
 
-    <Button
+    <!--Button
         android:id="@+id/test_notifikasi"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Test Notifikasi"/>
-
+        android:text="Test Notifikasi"/-->
 
 </LinearLayout>

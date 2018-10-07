@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         GridAdapter gridAdapter = new GridAdapter(this, 0);
         gridView.setAdapter(gridAdapter);
 
-        gridAdapter.add(new GridModel(android.R.drawable.ic_menu_share, R.string.laporan));
-        gridAdapter.add(new GridModel(android.R.drawable.ic_dialog_info, R.string.informasi));
+        gridAdapter.add(new GridModel(R.drawable.ic_reports, R.string.laporan));
+        gridAdapter.add(new GridModel(R.drawable.ic_info, R.string.informasi));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

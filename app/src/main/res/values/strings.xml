@@ -17,6 +17,7 @@
     <string name="suratditerima">Surat Diterima</string>
     <string name="laporansaya">Laporan Saya</string>
     <string name="semualaporan">Semua Laporan</string>
+    <string name="detailsurat">Detail Surat</string>
 
     <string name="nosurat">Nomor Surat</string>
     <string name="tempat">Tempat</string>
@@ -25,6 +26,8 @@
     <string name="durasi">Durasi</string>
     <string name="kategori">Kategori</string>
     <string name="buatlaporan">Buat Laporan</string>
+    <string name="keterangan">Keterangan</string>
+    <string name="tanggapan">Tanggapan</string>
 
     <string name="nointernet">Tidak dapat terhubung ke jaringan. Silahkan coba lagi</string>
     <string name="notujuaninfo">Tidak ada tujuan info yang dipilih</string>

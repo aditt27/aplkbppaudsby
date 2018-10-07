@@ -6,18 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.adibu.aplk.R;
 
-public class DetailSuratActivity extends AppCompatActivity {
+public class SuratDetailActivity extends AppCompatActivity {
 
     Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_surat);
+        setContentView(R.layout.activity_surat_detail);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -29,7 +30,7 @@ public class DetailSuratActivity extends AppCompatActivity {
         TextView tempat = findViewById(R.id.detail_surat_tempat);
         TextView durasi = findViewById(R.id.detail_surat_durasi);
         TextView waktu = findViewById(R.id.detail_surat_waktu);
-        TextView buatLaporan = findViewById(R.id.detail_surat_buat_laporan);
+        LinearLayout buatLaporan = findViewById(R.id.detail_surat_buat_laporan);
 
         noSurat.setText(mIntent.getStringExtra("noSurat"));
         kategori.setText(mIntent.getStringExtra("kategori"));
@@ -41,7 +42,8 @@ public class DetailSuratActivity extends AppCompatActivity {
         buatLaporan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(DetailSuratActivity.this, BuatLaporanActivity.class);
+                Intent i = new Intent(SuratDetailActivity.this, LaporanBuatActivity.class);
+                i.putExtras(mIntent);
                 startActivity(i);
             }
         });
