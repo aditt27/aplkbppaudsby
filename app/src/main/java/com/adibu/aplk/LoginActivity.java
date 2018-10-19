@@ -16,8 +16,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
-import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,20 +24,16 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class LoginActivity extends AppCompatActivity implements InternetConnectivityListener{
+public class LoginActivity extends AppCompatActivity {
 
     EditText mInputNip;
     EditText mInputPassword;
     Button mButtonSignIn;
-    InternetAvailabilityChecker mInternetAvailabilityChecker;
-    Boolean internetConnected = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
-        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         mInputNip = findViewById(R.id.input_nip);
         mInputPassword = findViewById(R.id.input_password);
@@ -58,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements InternetConnecti
                     mInputPassword.setError("Wajib diisi");
                 }
 
-                if(!nip.isEmpty() && !password.isEmpty() && internetConnected) {
+                if(!nip.isEmpty() && !password.isEmpty() && Helper.isInternetConnected(getApplicationContext())) {
                         verifySignIn(nip, password);
                 }
                 else if(!nip.isEmpty() && !password.isEmpty()){
@@ -74,17 +68,6 @@ public class LoginActivity extends AppCompatActivity implements InternetConnecti
         finishAffinity();
     }
 
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
-        internetConnected = isConnected;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
-        super.onDestroy();
-    }
-
     private void verifySignIn(final String nip, final String password) {
 
         final ProgressDialog pDialog = new ProgressDialog(this);
@@ -97,6 +80,8 @@ public class LoginActivity extends AppCompatActivity implements InternetConnecti
         final JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+                
                 try {
                     JSONArray jsonUser = response.getJSONArray("users");
                     if(jsonUser.length()>0) {
