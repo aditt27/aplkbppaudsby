@@ -13,12 +13,12 @@ public class ApiUrl {
 	public static final String URL_UPDATE_INFO_TERBACA = ROOT_API_URL + "u_status&no="; //GET ,  params: no, status (untuk mengubah angka pada status)
 
     public static final String URL_UPDATE_MSG = ROOT_API_URL + "updatemsg"; //POST , params: no, isi
-    public static final String URL_DELETE_MSG = ROOT_API_URL + "d_info&no="; //GET , params: no <-- baru
+    public static final String URL_DELETE_MSG = ROOT_API_URL + "d_info&no="; //GET , params: no_transaksi <-- baru
 
 	//Laporan
     public static final String URL_CREATE_LAPORAN = ROOT_API_URL + "c_laporan"; //POST , params: nop, isi, pic1, pic2, pic3 //nop adalah nomor perintah
     public static final String URL_READ_LAPORAN_TERKIRIM = ROOT_API_URL + "r_laporan&nip="; //GET , params: nip //Untuk Laporan Saya
-	//r_laporan_lain; //POST , params: nip // Untuk laporan lain (input adalah data user)
+	public static final String URL_READ_LAPORAN_SEMUA = ROOT_API_URL + "r_laporan_lain&nip="; //GET , params: nip // Untuk laporan lain (input adalah data user)
 	public static final String URL_READ_SURAT_DITERIMA = ROOT_API_URL + "r_surat&nip="; //GET , params: nip //Untuk surat diterima
 
     //User

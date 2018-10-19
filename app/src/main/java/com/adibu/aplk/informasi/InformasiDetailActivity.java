@@ -1,16 +1,19 @@
 package com.adibu.aplk.informasi;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +22,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adibu.aplk.ApiUrl;
 import com.adibu.aplk.AppSingleton;
+import com.adibu.aplk.Helper;
 import com.adibu.aplk.R;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,8 +35,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
-import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,14 +43,15 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InformasiDetailActivity extends AppCompatActivity implements InternetConnectivityListener {
+public class InformasiDetailActivity extends AppCompatActivity {
 
     Intent mIntent;
     CardView mDibacaCV;
     ListView mDibacaLV;
     ReadByAdapter mReadByAdapter;
-    InternetAvailabilityChecker mInternetAvailabilityChecker;
-    Boolean internetConnected = false;
+    ProgressBar mReadByProgressBar;
+    TextView mReadByEmpty;
+    String dariActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +59,6 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
         setContentView(R.layout.activity_informasi_detail);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
-        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         mIntent = getIntent();
 
@@ -69,12 +70,17 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
         TextView tanggalTV = findViewById(R.id.detail_informasi_tanggal);
         final TextView nullfoto = findViewById(R.id.detail_informasi_foto_null);
 
+        mReadByProgressBar = findViewById(R.id.readby_progressbar);
+        mReadByEmpty = findViewById(R.id.readby_empty);
+        mReadByEmpty.setVisibility(View.GONE);
+
         mDibacaCV = findViewById(R.id.detail_informasi_card_dibaca);
         mDibacaLV = findViewById(R.id.detail_informasi_listview_dibaca);
 
         mReadByAdapter = new ReadByAdapter(this);
         mDibacaLV.setAdapter(mReadByAdapter);
-        mDibacaLV.setEmptyView(findViewById(R.id.readby_emptyview));
+
+        mDibacaLV.setVisibility(View.GONE);
 
         String nama = mIntent.getStringExtra("nama");
         if(nama==null) {
@@ -110,9 +116,8 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
             fotoPB.setVisibility(View.GONE);
         }
 
-
-        String dari = mIntent.getStringExtra("dari");
-        if(dari.equals("terkirim")) {
+        dariActivity = mIntent.getStringExtra("dari");
+        if(dariActivity.equals("terkirim")) {
             readInfoTerbaca();
         } else  {
             mDibacaCV.setVisibility(View.GONE);
@@ -121,33 +126,77 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(dariActivity.equals("diterima")) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_delete, menu);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_hapus:
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(InformasiDetailActivity.this);
+                dialogBuilder.setMessage(R.string.deleteinfoconfirm);
+                dialogBuilder.setTitle(R.string.hapusinfo);
+                dialogBuilder.setNegativeButton(R.string.cancel, null);
+                dialogBuilder.setPositiveButton(R.string.hapus, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(Helper.isInternetConnected(getApplicationContext())) {
+                            deleteInfo();
+                            finish();
+                        } else {
+                            Toast.makeText(InformasiDetailActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
-        internetConnected = isConnected;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
-        super.onDestroy();
-    }
-
-    private void readInfoTerbaca() {
-        String TAG = "READ_INFO_TERBACA";
-        String URL = ApiUrl.URL_READ_INFO_TERBACA + mIntent.getStringExtra("no");
+    private void deleteInfo() {
+        final String TAG = "DELETE_INFO";
+        String URL = ApiUrl.URL_DELETE_MSG+mIntent.getStringExtra("no");
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.fillInStackTrace();
+            }
+        });
+
+        //Jalanin request yang udah dibuat
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
+    }
+
+    private void readInfoTerbaca() {
+        final String TAG = "READ_INFO_TERBACA";
+        String URL = ApiUrl.URL_READ_INFO_TERBACA + mIntent.getStringExtra("no");
+
+        if(Helper.isInternetConnected(getApplicationContext())) {
+            AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, true);
+        }
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+
                 try {
                     JSONArray status = response.getJSONArray("status");
                     for(int i=0;i<status.length();i++) {
@@ -160,6 +209,14 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
                             mReadByAdapter.add(new ReadBy(no, nama, stat, waktu));
                         }
                     }
+                    mReadByProgressBar.setVisibility(View.GONE);
+                    if(mReadByAdapter.isEmpty()) {
+                        mReadByEmpty.setVisibility(View.VISIBLE);
+                    } else {
+                        mDibacaLV.setVisibility(View.VISIBLE);
+                    }
+                    Helper.justifyListViewHeightBasedOnChildren(mDibacaLV);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -179,14 +236,10 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
         final String TAG = "UPDATE_INFO_TERBACA";
         String URL = ApiUrl.URL_UPDATE_INFO_TERBACA + mIntent.getStringExtra("no");
 
-        if(internetConnected) {
-            AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, false);
-        }
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, response.toString());
+                Log.d(TAG, response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -206,8 +259,6 @@ public class InformasiDetailActivity extends AppCompatActivity implements Intern
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest, TAG);
 
     }
-
-
 
     private class ReadBy {
         private int noTransaksi;

@@ -15,13 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
 import com.adibu.aplk.ApiUrl;
 import com.adibu.aplk.AppSingleton;
+import com.adibu.aplk.Helper;
 import com.adibu.aplk.R;
 import com.adibu.aplk.SessionManager;
 import com.adibu.aplk.VolleyMultiPartRequest;
@@ -31,15 +32,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
-import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InformasiTambahActivity extends AppCompatActivity implements InternetConnectivityListener {
+public class InformasiTambahActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE = 1;
 
@@ -48,16 +47,11 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
     private Button mButtonGambar;
     private Bitmap mBitmapGambar;
     private CheckBox[] mKirimKeCheckBoxes;
-    InternetAvailabilityChecker mInternetAvailabilityChecker;
-    Boolean internetConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informasi_tambah);
-
-        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
-        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -72,7 +66,8 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 findViewById(R.id.tambah_info_checkbox_sik),
                 findViewById(R.id.tambah_info_checkbox_psd),
                 findViewById(R.id.tambah_info_checkbox_subbag),
-                findViewById(R.id.tambah_info_checkbox_wiyata)
+                findViewById(R.id.tambah_info_checkbox_wiyata),
+                findViewById(R.id.tambah_info_checkbox_semua)
         };
 
         mButtonGambar.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +77,21 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            }
+        });
+
+        mKirimKeCheckBoxes[7].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    for(int i=0; i<mKirimKeCheckBoxes.length-1;i++) {
+                        mKirimKeCheckBoxes[i].setEnabled(false);
+                    }
+                } else {
+                    for(int i=0; i<mKirimKeCheckBoxes.length-1;i++) {
+                        mKirimKeCheckBoxes[i].setEnabled(true);
+                    }
+                }
             }
         });
     }
@@ -100,7 +110,7 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 String info = mInputInfo.getText().toString().trim();
                 if(!info.isEmpty()){
                     if(isCheckBoxesChecked()) {
-                        if(internetConnected) {
+                        if(Helper.isInternetConnected(getApplicationContext())) {
                             if(mBitmapGambar==null){
                                 addInfo(info);
                                 finish();
@@ -124,18 +134,6 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
-        internetConnected = isConnected;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
-        super.onDestroy();
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,13 +173,25 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 Map<String, String> params = new HashMap<>();
                 params.put("nip", sm.getSessionNIP());
                 params.put("isi", info);
-                params.put("a", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0));
-                params.put("b", String.valueOf(mKirimKeCheckBoxes[1].isChecked()? 1:0));
-                params.put("c", String.valueOf(mKirimKeCheckBoxes[2].isChecked()? 1:0));
-                params.put("d", String.valueOf(mKirimKeCheckBoxes[3].isChecked()? 1:0));
-                params.put("e", String.valueOf(mKirimKeCheckBoxes[4].isChecked()? 1:0));
-                params.put("f", String.valueOf(mKirimKeCheckBoxes[5].isChecked()? 1:0));
-                params.put("g", String.valueOf(mKirimKeCheckBoxes[6].isChecked()? 1:0));
+
+                if(mKirimKeCheckBoxes[7].isChecked()) {
+                    params.put("a", String.valueOf(1));
+                    params.put("b", String.valueOf(1));
+                    params.put("c", String.valueOf(1));
+                    params.put("d", String.valueOf(1));
+                    params.put("e", String.valueOf(1));
+                    params.put("f", String.valueOf(1));
+                    params.put("g", String.valueOf(1));
+
+                } else {
+                    params.put("a", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0));
+                    params.put("b", String.valueOf(mKirimKeCheckBoxes[1].isChecked()? 1:0));
+                    params.put("c", String.valueOf(mKirimKeCheckBoxes[2].isChecked()? 1:0));
+                    params.put("d", String.valueOf(mKirimKeCheckBoxes[3].isChecked()? 1:0));
+                    params.put("e", String.valueOf(mKirimKeCheckBoxes[4].isChecked()? 1:0));
+                    params.put("f", String.valueOf(mKirimKeCheckBoxes[5].isChecked()? 1:0));
+                    params.put("g", String.valueOf(mKirimKeCheckBoxes[6].isChecked()? 1:0));
+                }
                 return params;
             }
         };
@@ -198,7 +208,13 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
-                        Log.d(TAG, "Multipart: " + response);
+                        String resp = "";
+                        try {
+                            resp = new String(response.data, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, "Multipart: " + resp);
                     }
                 },
                 new Response.ErrorListener() {
@@ -214,13 +230,25 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 Map<String, String> params = new HashMap<>();
                 params.put("nip", sm.getSessionNIP());
                 params.put("isi", info);
-                params.put("a", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0));
-                params.put("b", String.valueOf(mKirimKeCheckBoxes[1].isChecked()? 1:0));
-                params.put("c", String.valueOf(mKirimKeCheckBoxes[2].isChecked()? 1:0));
-                params.put("d", String.valueOf(mKirimKeCheckBoxes[3].isChecked()? 1:0));
-                params.put("e", String.valueOf(mKirimKeCheckBoxes[4].isChecked()? 1:0));
-                params.put("f", String.valueOf(mKirimKeCheckBoxes[5].isChecked()? 1:0));
-                params.put("g", String.valueOf(mKirimKeCheckBoxes[6].isChecked()? 1:0));
+
+                if(mKirimKeCheckBoxes[7].isChecked()) {
+                    params.put("a", String.valueOf(1));
+                    params.put("b", String.valueOf(1));
+                    params.put("c", String.valueOf(1));
+                    params.put("d", String.valueOf(1));
+                    params.put("e", String.valueOf(1));
+                    params.put("f", String.valueOf(1));
+                    params.put("g", String.valueOf(1));
+
+                } else {
+                    params.put("a", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0));
+                    params.put("b", String.valueOf(mKirimKeCheckBoxes[1].isChecked()? 1:0));
+                    params.put("c", String.valueOf(mKirimKeCheckBoxes[2].isChecked()? 1:0));
+                    params.put("d", String.valueOf(mKirimKeCheckBoxes[3].isChecked()? 1:0));
+                    params.put("e", String.valueOf(mKirimKeCheckBoxes[4].isChecked()? 1:0));
+                    params.put("f", String.valueOf(mKirimKeCheckBoxes[5].isChecked()? 1:0));
+                    params.put("g", String.valueOf(mKirimKeCheckBoxes[6].isChecked()? 1:0));
+                }
                 return params;
             }
 
@@ -231,7 +259,7 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
                 long imagename = System.currentTimeMillis();
-                params.put("pic", new DataPart(imagename + ".png", getFileDataFromDrawable(image)));
+                params.put("pic", new DataPart(imagename + ".png", Helper.getFileDataFromDrawable(image)));
                 return params;
             }
         };
@@ -248,24 +276,12 @@ public class InformasiTambahActivity extends AppCompatActivity implements Intern
                 mKirimKeCheckBoxes[3].isChecked() ||
                 mKirimKeCheckBoxes[4].isChecked() ||
                 mKirimKeCheckBoxes[5].isChecked() ||
-                mKirimKeCheckBoxes[6].isChecked()) {
+                mKirimKeCheckBoxes[6].isChecked() ||
+                mKirimKeCheckBoxes[7].isChecked()) {
             return true;
         }
         return false;
     }
 
-    /*
-     * The method is taking Bitmap as an argument
-     * then it will return the byte[] array for the given bitmap
-     * and we will send this array to the server
-     * here we are using PNG Compression with 80% quality
-     * you can give quality between 0 to 100
-     * 0 means worse quality
-     * 100 means best quality
-     * */
-    public byte[] getFileDataFromDrawable(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
-    }
+
 }

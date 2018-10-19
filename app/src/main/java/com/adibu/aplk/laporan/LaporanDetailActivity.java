@@ -1,7 +1,6 @@
 package com.adibu.aplk.laporan;
 
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,13 +12,9 @@ import android.widget.TextView;
 import com.adibu.aplk.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
-import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
-public class LaporanDetailActivity extends AppCompatActivity implements InternetConnectivityListener {
+public class LaporanDetailActivity extends AppCompatActivity {
 
-    private InternetAvailabilityChecker mInternetAvailabilityChecker;
-    private Boolean internetConnected = false;
     Intent mIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +22,6 @@ public class LaporanDetailActivity extends AppCompatActivity implements Internet
         setContentView(R.layout.activity_laporan_detail);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
-        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         mIntent = getIntent();
 
@@ -114,17 +106,5 @@ public class LaporanDetailActivity extends AppCompatActivity implements Internet
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
-        internetConnected = isConnected;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
-        super.onDestroy();
-    }
-
 
 }

@@ -21,22 +21,20 @@ import android.widget.Toast;
 
 import com.adibu.aplk.ApiUrl;
 import com.adibu.aplk.AppSingleton;
+import com.adibu.aplk.Helper;
 import com.adibu.aplk.R;
 import com.adibu.aplk.VolleyMultiPartRequest;
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
-import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LaporanBuatActivity extends AppCompatActivity implements InternetConnectivityListener {
+public class LaporanBuatActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 1;
 
@@ -48,17 +46,12 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
     ImageView[] deleteFoto = new ImageView[3];
     Button browse;
     Bitmap[] bitmapFoto = new Bitmap[3];
-    InternetAvailabilityChecker mInternetAvailabilityChecker;
-    Boolean internetConnected = false;
     int totalFoto = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_laporan_buat);
-
-        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
-        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -135,7 +128,7 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
                     Toast.makeText(LaporanBuatActivity.this, "Tidak ada foto yang diunggah", Toast.LENGTH_LONG).show();
                 }
                 if(!ket.isEmpty() && totalFoto>=1) {
-                    if(internetConnected) {
+                    if(Helper.isInternetConnected(getApplicationContext())) {
                         buatLaporan();
                         finish();
                     } else {
@@ -146,17 +139,6 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
-        internetConnected = isConnected;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
-        super.onDestroy();
     }
 
     @Override
@@ -209,7 +191,13 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
         VolleyMultiPartRequest multiPartRequest = new VolleyMultiPartRequest(Request.Method.POST, URL, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
-                Log.d(TAG, "Multipart: " + response);
+                String resp = "";
+                try {
+                    resp = new String(response.data, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Multipart: " + resp);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -218,7 +206,7 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
             }
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("nop", String.valueOf(mIntent.getStringExtra("noPerintah")));
                 params.put("isi", keterangan.getText().toString().trim());
@@ -226,14 +214,14 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
             }
 
             @Override
-            protected Map<String, DataPart> getByteData() throws AuthFailureError {
+            protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
                 long imagename = System.currentTimeMillis();
                 int foto = 0;
                 for(int i=0;i<bitmapFoto.length;i++){
                     if(bitmapFoto[i]!=null) {
                         foto += 1;
-                        params.put("pic" + foto, new DataPart(imagename + ".png", getFileDataFromDrawable(bitmapFoto[i])));
+                        params.put("pic" + foto, new DataPart(imagename + ".png", Helper.getFileDataFromDrawable(bitmapFoto[i])));
                     }
                 }
                 return params;
@@ -242,20 +230,5 @@ public class LaporanBuatActivity extends AppCompatActivity implements InternetCo
 
         //Jalanin request yang udah dibuat
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest, TAG);
-    }
-
-    /*
-     * The method is taking Bitmap as an argument
-     * then it will return the byte[] array for the given bitmap
-     * and we will send this array to the server
-     * here we are using PNG Compression with 80% quality
-     * you can give quality between 0 to 100
-     * 0 means worse quality
-     * 100 means best quality
-     * */
-    public byte[] getFileDataFromDrawable(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
     }
 }

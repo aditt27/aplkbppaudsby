@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,14 +19,13 @@ import android.widget.Toast;
 
 import com.adibu.aplk.ApiUrl;
 import com.adibu.aplk.AppSingleton;
+import com.adibu.aplk.Helper;
 import com.adibu.aplk.R;
 import com.adibu.aplk.SessionManager;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
-import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,13 +33,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SuratDiterimaActivity extends AppCompatActivity implements InternetConnectivityListener {
+public class SuratDiterimaActivity extends AppCompatActivity {
 
     private ArrayList<LaporanSuratModel> mListSurat = new ArrayList<>();
     private SuratDiterimaRVAdapter mSuratDiterimaRVAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
-    private InternetAvailabilityChecker mInternetAvailabilityChecker;
-    private Boolean internetConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +45,6 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
         setContentView(R.layout.layout_swiperecycleview);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mInternetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
-        mInternetAvailabilityChecker.addInternetConnectivityListener(this);
 
         RecyclerView recyclerView = findViewById(R.id.list_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -61,7 +56,7 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(internetConnected) {
+                if(Helper.isInternetConnected(getApplicationContext())) {
                     getListSuratDiterima();
                 } else {
                     Toast.makeText(SuratDiterimaActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
@@ -86,30 +81,21 @@ public class SuratDiterimaActivity extends AppCompatActivity implements Internet
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
-        internetConnected = isConnected;
-    }
-
-    @Override
-    protected void onDestroy() {
-        mInternetAvailabilityChecker.removeInternetConnectivityChangeListener(this);
-        super.onDestroy();
-    }
-
     private void getListSuratDiterima() {
 
         SessionManager sm = new SessionManager(getApplicationContext());
         final String TAG = "READ_SURAT_DITERIMA";
         String URL = ApiUrl.URL_READ_SURAT_DITERIMA + sm.getSessionNIP();
 
-        if(internetConnected) {
-            AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, false);
+        if(Helper.isInternetConnected(getApplicationContext())) {
+            AppSingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().invalidate(URL, true);
         }
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+
                 try {
                     //hapus isi informasi (untuk refresh)
                     mListSurat.clear();

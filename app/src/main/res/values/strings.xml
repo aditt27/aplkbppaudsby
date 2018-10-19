@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">APLK</string>
+    <string name="app_name">Balai Center</string>
 
     <string name="informasi">Informasi</string>
     <string name="informasi_baru"> Tambah Info</string>
@@ -28,12 +28,17 @@
     <string name="buatlaporan">Buat Laporan</string>
     <string name="keterangan">Keterangan</string>
     <string name="tanggapan">Tanggapan</string>
+    <string name="semua">Semua</string>
 
     <string name="nointernet">Tidak dapat terhubung ke jaringan. Silahkan coba lagi</string>
     <string name="notujuaninfo">Tidak ada tujuan info yang dipilih</string>
 
+    <string name="browse">Browse</string>
+
     <string name="kirim">Kirim</string>
     <string name="harus_diisi">Harus diisi</string>
+
+    <string name="hapus">Hapus</string>
 
     <string name="title_activity_login">Sign in</string>
     <string name="salahnip">NIP anda tidak terdaftar</string>
@@ -45,6 +50,13 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
 
+    <string name="ganti">Ganti</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="passlama">Password Lama</string>
+    <string name="passbaru">Password Baru</string>
+    <string name="retypepassbaru">Ketik Ulang Password Baru</string>
+
     <string name="foto">Foto</string>
     <string name="nullfoto">Tidak ada foto yang dilampirkan</string>
     <string name="errorfoto">Terjadi kesalahan. Foto tidak dapat dimuat</string>
@@ -53,6 +65,10 @@
     <string name="pesan">Pesan</string>
     <string name="tanggal">Tanggal</string>
     <string name="dibacaoleh">Sudah dibaca oleh</string>
+    <string name="tidakdibaca">(Belum ada yang membaca info ini)</string>
+
+    <string name="deleteinfoconfirm">Apa anda yakin ingin menghapus info ini?</string>
+    <string name="hapusinfo">Hapus Info</string>
 
 
     <!--Role-->

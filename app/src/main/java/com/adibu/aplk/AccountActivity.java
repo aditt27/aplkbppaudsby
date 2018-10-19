@@ -1,10 +1,14 @@
 package com.adibu.aplk;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,6 +61,52 @@ public class AccountActivity extends AppCompatActivity {
         gantiPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AccountActivity.this);
+                dialogBuilder.setTitle(R.string.gantipassword);
+                dialogBuilder.setView(R.layout.activity_account_ganti_password_dialog);
+                dialogBuilder.setNegativeButton(R.string.cancel, null);
+                dialogBuilder.setPositiveButton(R.string.ganti, null);
+
+                final AlertDialog dialog = dialogBuilder.create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(final DialogInterface dialogInterface) {
+
+                        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Dialog d = (Dialog) dialogInterface;
+
+                                EditText passLamaET = d.findViewById(R.id.akun_ganti_password_current_pass);
+                                EditText passBaruET = d.findViewById(R.id.akun_ganti_password_pass_baru);
+                                EditText retypePassBaruET = d.findViewById(R.id.akun_ganti_password_retype_pass_baru);
+                                TextView errorTV = d.findViewById(R.id.akun_ganti_password_tv);
+
+                                String passLama = passLamaET.getText().toString();
+                                String passBaru = passBaruET.getText().toString();
+                                String retypePassBaru = retypePassBaruET.getText().toString();
+
+                                if(passLama.isEmpty()) {
+                                    passLamaET.setError("Harus Diisi");
+                                }
+                                if(passBaru.isEmpty()) {
+                                    passBaruET.setError("Harus Diisi");
+                                }
+                                if(retypePassBaru.isEmpty()) {
+                                    retypePassBaruET.setError("Harus Diisi");
+                                }
+
+                                if(!passBaru.isEmpty() && !passLama.isEmpty() && !retypePassBaru.isEmpty()) {
+                                    gantiPass();
+                                    d.dismiss();
+                                }
+                            }
+                        });
+                    }
+                });
+                dialog.show();
 
             }
         });

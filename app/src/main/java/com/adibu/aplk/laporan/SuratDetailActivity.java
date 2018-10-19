@@ -48,7 +48,6 @@ public class SuratDetailActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     @Override
