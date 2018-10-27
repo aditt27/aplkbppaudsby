@@ -24,6 +24,8 @@ import com.adibu.aplk.AppSingleton;
 import com.adibu.aplk.Helper;
 import com.adibu.aplk.R;
 import com.adibu.aplk.VolleyMultiPartRequest;
+import com.adibu.aplk.VolleyMultiPartRequest2;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -129,7 +131,7 @@ public class LaporanBuatActivity extends AppCompatActivity {
                 }
                 if(!ket.isEmpty() && totalFoto>=1) {
                     if(Helper.isInternetConnected(getApplicationContext())) {
-                        buatLaporan();
+                        buatLaporan2();
                         finish();
                     } else {
                         Toast.makeText(LaporanBuatActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
@@ -228,7 +230,63 @@ public class LaporanBuatActivity extends AppCompatActivity {
             }
         };
 
+        //Fix volley library for sending data twice
+        multiPartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         //Jalanin request yang udah dibuat
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest, TAG);
+    }
+
+    private void buatLaporan2() {
+        final String TAG = "CREATE_LAPORAN";
+        String URL = ApiUrl.URL_CREATE_LAPORAN;
+
+        VolleyMultiPartRequest2 multiPartRequest2 = new VolleyMultiPartRequest2(URL, null, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                String resp = "";
+                try {
+                    resp = new String(response.data, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Multipart: " + resp);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.fillInStackTrace();
+            }
+        });
+
+        multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("nop", String.valueOf(mIntent.getStringExtra("noPerintah"))));
+        multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("isi", String.valueOf(keterangan.getText().toString().trim())));
+
+        //Fix volley library for sending data twice
+        multiPartRequest2.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        int foto = 0;
+        long imagename = System.currentTimeMillis();
+        for(int i=0;i<bitmapFoto.length;i++){
+            if(bitmapFoto[i]!=null) {
+                foto += 1;
+                multiPartRequest2.addPart(new VolleyMultiPartRequest2.FilePart("pic" + foto, "image/png", imagename + ".png", Helper.getFileDataFromDrawable(bitmapFoto[i])));
+            }
+        }
+
+        //Fix volley library for sending data twice
+        multiPartRequest2.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        //Jalanin request yang udah dibuat
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest2, TAG);
     }
 }

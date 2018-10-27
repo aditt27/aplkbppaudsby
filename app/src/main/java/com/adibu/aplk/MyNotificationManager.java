@@ -7,21 +7,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.text.Html;
 import android.util.Log;
 
 import com.adibu.aplk.informasi.InformasiDiterimaActivity;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class MyNotificationManager {
 
@@ -29,6 +22,7 @@ public class MyNotificationManager {
 
     public static final String INFORMASI_CHANNEL = "INFORMASI";
     public static final String LAPORAN_CHANNEL = "LAPORAN";
+    public static final String GENERAL_CHANNEL = "GENERAL";
 
     private Context mContext;
     private NotificationManager mNotificationManager;
@@ -42,7 +36,7 @@ public class MyNotificationManager {
     }
 
     public void showBigNotification(String title, String message, String url) {
-        Intent intent = new Intent(mContext, InformasiDiterimaActivity.class)
+        Intent intent = new Intent(mContext, MainActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -63,7 +57,29 @@ public class MyNotificationManager {
 
         int id = mSessionManager.getNotificationId();
         mNotificationManager.notify(id, notification);
-        summaryNotificatiton();
+    }
+
+    public void showGeneralNotification(String title, String message) {
+        Intent intent = new Intent(mContext, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                mContext,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(mContext, GENERAL_CHANNEL)
+                .setSmallIcon(android.R.drawable.ic_menu_add)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setChannelId(GENERAL_CHANNEL)
+                .build();
+
+        int id = mSessionManager.getNotificationId();
+        mNotificationManager.notify(id, notification);
     }
 
     public void showInformasiNotification(String title, String message) {
@@ -89,10 +105,10 @@ public class MyNotificationManager {
 
         int id = mSessionManager.getNotificationId();
         mNotificationManager.notify(id, notification);
-        summaryNotificatiton();
+        informasiSummaryNotificatiton();
     }
 
-    private void summaryNotificatiton() {
+    private void informasiSummaryNotificatiton() {
         //use constant ID for notification used as group summary
         int SUMMARY_ID = 0;
 
@@ -126,9 +142,14 @@ public class MyNotificationManager {
             channel2.enableLights(true);
             channel2.setVibrationPattern(new long[]{600, 250, 250});
 
+            NotificationChannel channel3 = new NotificationChannel(GENERAL_CHANNEL, mContext.getString(R.string.general), NotificationManager.IMPORTANCE_DEFAULT);
+            channel3.enableLights(true);
+            channel3.setVibrationPattern(new long[]{600, 600, 600});
+
             //Assign channel
             mNotificationManager.createNotificationChannel(channel1);
             mNotificationManager.createNotificationChannel(channel2);
+            mNotificationManager.createNotificationChannel(channel3);
         }
     }
 

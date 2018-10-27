@@ -81,7 +81,9 @@
         <activity
             android:name=".laporan.LaporanBuatActivity"
             android:label="@string/buatlaporan" />
-        <activity android:name=".laporan.LaporanDetailActivity"></activity>
+        <activity
+            android:name=".laporan.LaporanDetailActivity"
+            android:label="@string/detaillaporan"/>
     </application>
 
 </manifest>

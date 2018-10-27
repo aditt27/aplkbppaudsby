@@ -127,10 +127,8 @@ public class InformasiDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(dariActivity.equals("diterima")) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.menu_delete, menu);
-        }
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_delete, menu);
         return true;
     }
 
@@ -149,7 +147,11 @@ public class InformasiDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(Helper.isInternetConnected(getApplicationContext())) {
-                            deleteInfo();
+                            if(dariActivity.equals("terkirim")) {
+                                deleteInfoTerkirim();
+                            } else {
+                                deleteInfoDiterima();
+                            }
                             finish();
                         } else {
                             Toast.makeText(InformasiDetailActivity.this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
@@ -164,9 +166,29 @@ public class InformasiDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteInfo() {
-        final String TAG = "DELETE_INFO";
-        String URL = ApiUrl.URL_DELETE_MSG+mIntent.getStringExtra("no");
+    private void deleteInfoDiterima() {
+        final String TAG = "DELETE_INFO_DITERIMA";
+        String URL = ApiUrl.URL_DELETE_INFO_DITERIMA +mIntent.getStringExtra("no");
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.fillInStackTrace();
+            }
+        });
+
+        //Jalanin request yang udah dibuat
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
+    }
+
+    private void deleteInfoTerkirim() {
+        final String TAG = "DELETE_INFO_TERKIRIM";
+        String URL = ApiUrl.URL_DELETE_INFO_TERKIRIM +mIntent.getStringExtra("no");
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override

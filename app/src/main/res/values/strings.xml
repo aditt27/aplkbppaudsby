@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Balai Center</string>
 
+    <string name="general">General</string>
     <string name="informasi">Informasi</string>
     <string name="informasi_baru"> Tambah Info</string>
     <string name="detailpesan">Detail Info</string>
@@ -18,6 +19,7 @@
     <string name="laporansaya">Laporan Saya</string>
     <string name="semualaporan">Semua Laporan</string>
     <string name="detailsurat">Detail Surat</string>
+    <string name="detaillaporan">Detail Laporan</string>
 
     <string name="nosurat">Nomor Surat</string>
     <string name="tempat">Tempat</string>

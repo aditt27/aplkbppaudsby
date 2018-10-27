@@ -34,7 +34,7 @@ public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
 
-        if(mSessionManager.isLoggedIn()) {
+        if( mSessionManager!=null && mSessionManager.isLoggedIn()) {
             //Getting registration token
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 

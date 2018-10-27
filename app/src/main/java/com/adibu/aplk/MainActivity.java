@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_main_logout:
                 mSessionManager.clearSession();
+                mSessionManager.startLoginActivity();
                 return true;
             case R.id.menu_main_account:
                 Intent i = new Intent(MainActivity.this, AccountActivity.class);

@@ -26,6 +26,8 @@ import com.adibu.aplk.Helper;
 import com.adibu.aplk.R;
 import com.adibu.aplk.SessionManager;
 import com.adibu.aplk.VolleyMultiPartRequest;
+import com.adibu.aplk.VolleyMultiPartRequest2;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 
@@ -115,7 +117,7 @@ public class InformasiTambahActivity extends AppCompatActivity{
                                 addInfo(info);
                                 finish();
                             } else {
-                                addInfo(info, mBitmapGambar);
+                                addInfo2(info, mBitmapGambar);
                                 finish();
                             }
                         } else {
@@ -196,6 +198,12 @@ public class InformasiTambahActivity extends AppCompatActivity{
             }
         };
 
+        //Fix volley library for sending data twice
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         //Jalanin request yang udah dibuat
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest, TAG);
     }
@@ -264,9 +272,67 @@ public class InformasiTambahActivity extends AppCompatActivity{
             }
         };
 
+        //Fix volley library for sending data twice
+        multiPartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         //Jalanin request yang udah dibuat
         AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest, TAG);
 
+    }
+
+    private void addInfo2(final String info, final Bitmap image) {
+        final String TAG = "CREATE_INFO 2";
+        String URL = ApiUrl.URL_CREATE_INFO;
+        SessionManager sm = new SessionManager(getApplicationContext());
+
+        VolleyMultiPartRequest2 multiPartRequest2 = new VolleyMultiPartRequest2(URL, null, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                String resp = "";
+                try {
+                    resp = new String(response.data, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Multipart: " + resp);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.fillInStackTrace();
+            }
+        });
+
+        multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("nip", sm.getSessionNIP() ));
+        multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("isi", info ));
+
+        long imagename = System.currentTimeMillis();
+        multiPartRequest2.addPart(new VolleyMultiPartRequest2.FilePart("pic", "image/png", imagename + ".png", Helper.getFileDataFromDrawable(image)));
+
+        if(mKirimKeCheckBoxes[7].isChecked()) {
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("a", "1"));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("b", "1"));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("c", "1"));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("d", "1"));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("e", "1"));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("f", "1"));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("g", "1"));
+
+        } else {
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("a", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("b", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("c", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("d", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("e", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("f", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+            multiPartRequest2.addPart(new VolleyMultiPartRequest2.FormPart("g", String.valueOf(mKirimKeCheckBoxes[0].isChecked()? 1:0)));
+        }
+
+        //Jalanin request yang udah dibuat
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(multiPartRequest2, TAG);
     }
 
     private Boolean isCheckBoxesChecked() {

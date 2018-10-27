@@ -102,7 +102,7 @@ public class SessionManager {
 
     public void checkLogin(){
         // Check login status
-        if(!this.isLoggedIn()){
+        if(!isLoggedIn()){
             startLoginActivity();
         }
     }
@@ -111,17 +111,18 @@ public class SessionManager {
         //Clear All data from Shared Preferences
         editor.clear();
         editor.commit();
-
-        //Starting Login Activity
-        startLoginActivity();
     }
 
     public Boolean isLoggedIn() {
-        return pref.getBoolean(IS_LOGIN, false);
+        if(pref.contains(IS_LOGIN)) {
+            return pref.getBoolean(IS_LOGIN, false);
+        } else {
+            return false;
+        }
     }
 
 
-    private void startLoginActivity() {
+    public void startLoginActivity() {
         //Redirect user to Login Activity
         Intent i = new Intent(context, LoginActivity.class);
         // Closing all the Activities

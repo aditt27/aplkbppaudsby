@@ -5,12 +5,22 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -99,7 +109,7 @@ public class AccountActivity extends AppCompatActivity {
                                 }
 
                                 if(!passBaru.isEmpty() && !passLama.isEmpty() && !retypePassBaru.isEmpty()) {
-                                    gantiPass();
+                                    gantiPass(passLama, passBaru, retypePassBaru);
                                     d.dismiss();
                                 }
                             }
@@ -124,7 +134,40 @@ public class AccountActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void gantiPass() {
+    private void gantiPass (final String passLama, String passBaru, String retypePassBaru) {
 
+        SessionManager sm = new SessionManager(getApplicationContext());
+        final String TAG = "READ_USER";
+        String URL = ApiUrl.URL_READ_USER + sm.getSessionNIP();
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+
+                try {
+                    JSONArray jsonUser = response.getJSONArray("users");
+                    if(jsonUser.length()>0) {
+                        String pass = jsonUser.getJSONObject(0).getString("password");
+                        if(Helper.stringToSHA256(passLama).equals(pass)) {
+
+                        } else {
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.fillInStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        //Jalanin request yang udah dibuat
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
+
 }

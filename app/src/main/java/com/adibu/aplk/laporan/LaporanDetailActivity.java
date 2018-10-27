@@ -45,15 +45,15 @@ public class LaporanDetailActivity extends AppCompatActivity {
         waktu.setText(mIntent.getStringExtra("waktu"));
         keterangan.setText(mIntent.getStringExtra("isi"));
 
-        //foto1.setVisibility(View.GONE);
-        //foto2.setVisibility(View.GONE);
-        //foto3.setVisibility(View.GONE);
+        foto1.setVisibility(View.GONE);
+        foto2.setVisibility(View.GONE);
+        foto3.setVisibility(View.GONE);
 
         String pic1 = mIntent.getStringExtra("pic1");
         String pic2 = mIntent.getStringExtra("pic2");
         String pic3 = mIntent.getStringExtra("pic3");
 
-        if(!pic1.isEmpty() || !pic2.isEmpty() || !pic3.isEmpty()) {
+        if(!pic1.isEmpty()) {
             Picasso.with(this)
                     .load(pic1)
                     .into(foto1, new Callback() {
@@ -67,6 +67,9 @@ public class LaporanDetailActivity extends AppCompatActivity {
 
                         }
                     });
+        }
+
+        if(!pic2.isEmpty()) {
             Picasso.with(this)
                     .load(pic2)
                     .into(foto2, new Callback() {
@@ -80,6 +83,9 @@ public class LaporanDetailActivity extends AppCompatActivity {
 
                         }
                     });
+        }
+
+        if(!pic3.isEmpty()) {
             Picasso.with(this)
                     .load(pic3)
                     .into(foto3, new Callback() {
@@ -94,6 +100,7 @@ public class LaporanDetailActivity extends AppCompatActivity {
                         }
                     });
         }
+
     }
 
     @Override

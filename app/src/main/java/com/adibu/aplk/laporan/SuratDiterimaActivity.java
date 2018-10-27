@@ -164,7 +164,7 @@ public class SuratDiterimaActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(SuratDiterimaActivity.this, SuratDetailActivity.class);
-                    i.putExtra("noPerintah", listSurat.get(holder.getAdapterPosition()).getNoPerintah());
+                    i.putExtra("noPerintah", String.valueOf(listSurat.get(holder.getAdapterPosition()).getNoPerintah()));
                     i.putExtra("noSurat", listSurat.get(holder.getAdapterPosition()).getNoSurat());
                     i.putExtra("waktu", listSurat.get(holder.getAdapterPosition()).getWaktu());
                     i.putExtra("status", listSurat.get(holder.getAdapterPosition()).getStatus());
