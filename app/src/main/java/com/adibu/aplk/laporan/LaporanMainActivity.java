@@ -10,8 +10,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.adibu.aplk.R;
+import com.adibu.aplk.SessionManager;
 import com.adibu.aplk.grid.GridAdapter;
 import com.adibu.aplk.grid.GridModel;
+
+import java.util.HashMap;
 
 public class LaporanMainActivity extends AppCompatActivity {
 
@@ -28,8 +31,15 @@ public class LaporanMainActivity extends AppCompatActivity {
 
         gridAdapter.add(new GridModel(R.drawable.ic_receive_mail, R.string.suratditerima));
         gridAdapter.add(new GridModel(R.drawable.ic_my_report, R.string.laporansaya));
-        gridAdapter.add(new GridModel(R.drawable.ic_all_reports, R.string.semualaporan));
 
+        SessionManager sm = new SessionManager(getApplicationContext());
+        HashMap session = sm.getSession();
+
+        Boolean isPengawas = (Boolean) session.get(SessionManager.KEY_PENGAWAS);
+        if(isPengawas) {
+            gridAdapter.add(new GridModel(R.drawable.ic_all_reports, R.string.semualaporan));
+        }
+        
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
