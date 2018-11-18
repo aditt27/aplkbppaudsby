@@ -1,8 +1,11 @@
 package com.adibu.aplk;
 
 public class ApiUrl {
-    private static final String ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
-    private static final String R_ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/r_api.php?apicall=";
+    //private static final String ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
+    //private static final String R_ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/r_api.php?apicall=";
+	
+	private static final String ROOT_API_URL = "https://pauddikmasjatim.kemdikbud.go.id/krisna/v1/api.php?apicall=";
+    private static final String R_ROOT_API_URL = "https://pauddikmasjatim.kemdikbud.go.id/krisna/v1/r_api.php?apicall=";
 
     //Informasi
     public static final String URL_CREATE_INFO = ROOT_API_URL + "c_info";  //POST , params: nip, isi, pic(optional), a(fungsional),b(pamong),c(program),d(sik),e(psd),f(subbag),g(wiyata)
