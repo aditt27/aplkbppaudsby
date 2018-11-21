@@ -39,5 +39,5 @@ public class ApiUrl {
 
 	//Notifikasi firebase
 	public static final String URL_REG_DEVICE = ROOT_API_URL + "c_device"; //POST, params: nip, token
-	//c_token //POST, params: token
+	public static final String URL_UNREAD = ROOT_API_URL + "unread&nip="; //GET, params: nip
 }
