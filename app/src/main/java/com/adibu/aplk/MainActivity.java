@@ -3,6 +3,7 @@ package com.adibu.aplk;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +16,14 @@ import com.adibu.aplk.grid.GridAdapter;
 import com.adibu.aplk.grid.GridModel;
 import com.adibu.aplk.informasi.InformasiMainActivity;
 import com.adibu.aplk.laporan.LaporanMainActivity;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONObject;
+
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,14 +74,39 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_main_logout:
-                mSessionManager.clearSession();
-                mSessionManager.startLoginActivity();
+                logout();
                 return true;
             case R.id.menu_main_account:
                 Intent i = new Intent(MainActivity.this, AccountActivity.class);
                 startActivity(i);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+
+        SessionManager sm = new SessionManager(getApplicationContext());
+        sm.checkLogin();
+
+        final String TAG = "LOGOUT";
+        String URL = ApiUrl.URL_LOGOUT+sm.getSessionNIP();
+
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG,response.toString());
+                mSessionManager.clearSession();
+                mSessionManager.startLoginActivity();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.fillInStackTrace();
+            }
+        });
+
+        //Jalanin request yang udah dibuat
+        AppSingleton.getInstance(getApplicationContext()).addToRequestQueue(objectRequest, TAG);
     }
 
 }

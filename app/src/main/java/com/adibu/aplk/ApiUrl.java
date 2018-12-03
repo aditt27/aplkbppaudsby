@@ -1,11 +1,11 @@
 package com.adibu.aplk;
 
 public class ApiUrl {
-    //private static final String ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
-    //private static final String R_ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/r_api.php?apicall=";
+    private static final String ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/api.php?apicall=";
+    private static final String R_ROOT_API_URL = "https://cilukbaa.000webhostapp.com/v1/r_api.php?apicall=";
 	
-	private static final String ROOT_API_URL = "https://pauddikmasjatim.kemdikbud.go.id/krisna/v1/api.php?apicall=";
-    private static final String R_ROOT_API_URL = "https://pauddikmasjatim.kemdikbud.go.id/krisna/v1/r_api.php?apicall=";
+	//private static final String ROOT_API_URL = "https://pauddikmasjatim.kemdikbud.go.id/krisna/v1/api.php?apicall=";
+    //private static final String R_ROOT_API_URL = "https://pauddikmasjatim.kemdikbud.go.id/krisna/v1/r_api.php?apicall=";
 
     //Informasi
     public static final String URL_CREATE_INFO = ROOT_API_URL + "c_info";  //POST , params: nip, isi, pic(optional), a(fungsional),b(pamong),c(program),d(sik),e(psd),f(subbag),g(wiyata)
@@ -29,8 +29,8 @@ public class ApiUrl {
     //User
     public static final String URL_CREATE_USER = ROOT_API_URL + "c_user"; //POST, params: nip, password, nama, karyawan, pengawas, admin, fungsional, pamong, program, sik, psd, subbag, wiyata
     public static final String URL_READ_USERS = ROOT_API_URL + "r_user"; //GET , no params
-    public static final String URL_READ_USER = R_ROOT_API_URL + "r_user_nip&nip="; //GET , params: nip
-	public static final String URL_UPDATE_USER_PASS = ROOT_API_URL + "u_pass&nip="; //GET, params: nip, password
+    public static final String URL_READ_USER = ROOT_API_URL + "r_user_nip&nip="; //GET , params: nip
+	public static final String URL_UPDATE_USER_PASS = ROOT_API_URL + "u_pass&nip="; //GET, params: nip, //POST : password
     public static final String URL_UPDATE_USER = ROOT_API_URL + "updateuser"; //POST , params: nip, nama
     public static final String URL_DELETE_USER = ROOT_API_URL + "deleteuser&no="; //GET , params: nip
 
@@ -42,5 +42,5 @@ public class ApiUrl {
 	public static final String URL_UNREAD = ROOT_API_URL + "unread&nip="; //GET, params: nip
 	
 	//Logout
-	public static final String URL_LOGOUT = ROOT_API_URL + "logout&nip=" //POST, params: nip
+	public static final String URL_LOGOUT = ROOT_API_URL + "logout&nip="; //GET, params: nip
 }

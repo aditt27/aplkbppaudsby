@@ -89,6 +89,7 @@ public class InformasiTerkirimActivity extends AppCompatActivity {
 
     private void getListInformasiTerkirim() {
         SessionManager sm = new SessionManager(getApplicationContext());
+        sm.checkLogin();
         final String TAG = "READ_INFOS_TERKIRIM";
         String URL = ApiUrl.URL_READ_INFOS_TERKIRIM + sm.getSessionNIP();
 

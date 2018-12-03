@@ -84,6 +84,7 @@ public class LaporanSayaActivity extends AppCompatActivity {
     private void getListLaporanSaya() {
 
         SessionManager sm = new SessionManager(getApplicationContext());
+        sm.checkLogin();
         final String TAG = "READ_LAPORAN_TERKIRIM";
         String URL = ApiUrl.URL_READ_LAPORAN_TERKIRIM + sm.getSessionNIP();
 

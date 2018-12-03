@@ -88,6 +88,7 @@ public class LaporanSemuaActivity extends AppCompatActivity {
     private void getListLaporanSemua() {
 
         SessionManager sm = new SessionManager(getApplicationContext());
+        sm.checkLogin();
         final String TAG = "READ_LAPORAN_SEMUA";
         String URL = ApiUrl.URL_READ_LAPORAN_SEMUA + sm.getSessionNIP();
 

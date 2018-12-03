@@ -39,7 +39,7 @@ public class LaporanMainActivity extends AppCompatActivity {
         if(isPengawas) {
             gridAdapter.add(new GridModel(R.drawable.ic_all_reports, R.string.semualaporan));
         }
-        
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

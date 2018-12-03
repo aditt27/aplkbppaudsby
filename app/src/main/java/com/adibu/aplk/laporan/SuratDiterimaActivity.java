@@ -84,6 +84,7 @@ public class SuratDiterimaActivity extends AppCompatActivity {
     private void getListSuratDiterima() {
 
         SessionManager sm = new SessionManager(getApplicationContext());
+        sm.checkLogin();
         final String TAG = "READ_SURAT_DITERIMA";
         String URL = ApiUrl.URL_READ_SURAT_DITERIMA + sm.getSessionNIP();
 

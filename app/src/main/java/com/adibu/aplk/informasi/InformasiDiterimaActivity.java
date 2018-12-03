@@ -90,6 +90,7 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
     private void getListInformasiDiterima() {
 
         SessionManager sm = new SessionManager(getApplicationContext());
+        sm.checkLogin();
         final String TAG = "READ_INFOS_DITERIMA";
         String URL = ApiUrl.URL_READ_INFOS_DITERIMA + sm.getSessionNIP();
 
