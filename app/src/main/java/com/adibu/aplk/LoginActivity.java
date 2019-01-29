@@ -1,7 +1,6 @@
 package com.adibu.aplk;
 
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,9 +19,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -86,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                     JSONArray jsonUser = response.getJSONArray("users");
                     if(jsonUser.length()>0) {
                         String pass = jsonUser.getJSONObject(0).getString("password");
-                        if(Helper.stringToSHA256(password).toLowerCase().equals(pass.toLowerCase())) {
+                        if(Helper.stringToMD5(password).toLowerCase().equals(pass.toLowerCase())) {
                             String nama = jsonUser.getJSONObject(0).getString("nama");
 
                             Boolean karyawan = jsonUser.getJSONObject(0).getInt("karyawan") == 1;

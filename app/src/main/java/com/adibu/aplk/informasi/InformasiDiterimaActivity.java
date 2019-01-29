@@ -71,6 +71,11 @@ public class InformasiDiterimaActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         //RefreshAnimation
         mSwipeRefresh.setRefreshing(true);
         //Ambil Data informasi dari DB

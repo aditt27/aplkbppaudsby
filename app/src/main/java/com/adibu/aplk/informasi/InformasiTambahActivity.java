@@ -267,7 +267,7 @@ public class InformasiTambahActivity extends AppCompatActivity{
         multiPartRequest.addPart(new VolleyMultiPartRequest.FormPart("isi", info ));
 
         long imagename = System.currentTimeMillis();
-        multiPartRequest.addPart(new VolleyMultiPartRequest.FilePart("pic", "image/png", imagename + ".png", Helper.getFileDataFromDrawable(image)));
+        multiPartRequest.addPart(new VolleyMultiPartRequest.FilePart("pic", "image/png", imagename + ".png", Helper.getCompressedBitmapData(image)));
 
         if(mKirimKeCheckBoxes[7].isChecked()) {
             multiPartRequest.addPart(new VolleyMultiPartRequest.FormPart("a", "1"));

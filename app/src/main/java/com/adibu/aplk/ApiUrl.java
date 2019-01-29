@@ -34,6 +34,7 @@ public class ApiUrl {
     public static final String URL_UPDATE_USER = ROOT_API_URL + "updateuser"; //POST , params: nip, nama
     public static final String URL_DELETE_USER = ROOT_API_URL + "deleteuser&no="; //GET , params: nip
 
+
     //Image
     public static final String URL_CREATE_INFO_UP = ROOT_API_URL + "up_img_info_update&no="; //POST , params: pic, no
 

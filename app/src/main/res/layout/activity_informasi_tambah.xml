@@ -104,15 +104,15 @@
                     android:textSize="16sp"
                     android:text="@string/kirimke" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"/>
+
                 <CheckBox
                     android:id="@+id/tambah_info_checkbox_semua"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/semua" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"/>
 
                 <CheckBox
                     android:id="@+id/tambah_info_checkbox_fungsional"

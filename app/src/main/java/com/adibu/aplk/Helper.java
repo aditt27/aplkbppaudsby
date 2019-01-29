@@ -1,16 +1,10 @@
 package com.adibu.aplk;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -53,6 +47,18 @@ public class Helper {
         listView.requestLayout();
     }
 
+    public static byte[] getCompressedBitmapData(Bitmap bitmap) {
+        byte[] bitmapData = getByteArray(bitmap);
+        Log.d("IMGCMPRSS", "Initial Compression: "+bitmapData.length);
+
+        //Maksimal 2MB (2MB = 2097152B)
+        while (bitmapData.length >= 2097152) {
+            bitmapData = getByteArray(bitmap);
+            Log.d("IMGCMPRSS", "Compressing: "+bitmapData.length);
+        }
+        return bitmapData;
+    }
+
     /*
      * The method is taking Bitmap as an argument
      * then it will return the byte[] array for the given bitmap
@@ -62,16 +68,16 @@ public class Helper {
      * 0 means worse quality
      * 100 means best quality
      * */
-    public static byte[] getFileDataFromDrawable(Bitmap bitmap) {
+    public static byte[] getByteArray(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static String stringToSHA256 (String string) {
+    public static String stringToMD5(String string) {
         MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance("MD5");
             md.update(string.getBytes());
 
             byte byteData[] = md.digest();

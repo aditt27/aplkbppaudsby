@@ -88,7 +88,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     JSONArray jsonUser = response.getJSONArray("users");
                     if (jsonUser.length() > 0) {
                         String pass = jsonUser.getJSONObject(0).getString("password");
-                        if (Helper.stringToSHA256(passLama).toLowerCase().equals(pass.toLowerCase())) {
+                        if (Helper.stringToMD5(passLama).toLowerCase().equals(pass.toLowerCase())) {
                             if(passBaru.equals(passBaruUlang)) {
                                 changePassword(passBaru);
                             } else {

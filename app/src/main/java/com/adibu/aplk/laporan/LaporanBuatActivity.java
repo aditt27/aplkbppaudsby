@@ -252,7 +252,7 @@ public class LaporanBuatActivity extends AppCompatActivity {
         for(int i=0;i<bitmapFoto.length;i++){
             if(bitmapFoto[i]!=null) {
                 foto += 1;
-                multiPartRequest.addPart(new VolleyMultiPartRequest.FilePart("pic" + foto, "image/png", imagename + ".png", Helper.getFileDataFromDrawable(bitmapFoto[i])));
+                multiPartRequest.addPart(new VolleyMultiPartRequest.FilePart("pic" + foto, "image/png", imagename + ".png", Helper.getCompressedBitmapData(bitmapFoto[i])));
             }
         }
 
